@@ -1,0 +1,17 @@
+
+
+<div class="container">
+
+    <h1>View App projects</h1>
+
+    <div>
+        <% @projects.each do |project| %>
+            <p><%=project.name%></p>
+            <p><%=project.description%></p>
+            <p><%=project.amount%></p>
+            <%=link_to "View #{project.name}",project%>
+        <% end %>
+    </div>
+
+    <%= link_to "Add Project",new_project_path,class:"btn btn-primary" %>
+</div>

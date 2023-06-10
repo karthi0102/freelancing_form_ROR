@@ -1,0 +1,47 @@
+<h1>Client Register</h1>
+
+
+<%= form_with model: @account,url: client_registration_path do |form| %>
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :email %><br>
+    <%= form.email_field :email %>
+  </div>
+
+  <div>
+    <%= form.label :phone %><br>
+    <%= form.number_field :phone %>
+  </div>
+
+  <div>
+    <%= form.label :password %><br>
+    <%= form.password_field :password %>
+  </div>
+
+  <div>
+    <%= form.label :linkedin %><br>
+    <%= form.url_field :linkedin %>
+  </div>
+
+
+
+  <div>
+    <%=form.label :image %><br>
+    <%=form.file_field :image %>
+  </div>
+
+
+  <div>
+    <%= form.label :gender %><br>
+    <%= form.select :gender,@gender %>
+  </div>
+
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

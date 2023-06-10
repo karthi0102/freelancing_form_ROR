@@ -1,0 +1,35 @@
+.landing_page_container{
+    min-height: 100vh;
+    max-height: 100%;
+    width: 100%;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-container{
+}
+
+.desc{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:20px
+}
+
+
+.client,.freelancer{
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap:12px;
+}
+
+.content{
+    text-align: justify;
+}
+

@@ -1,0 +1,25 @@
+
+<h1><%= @project.name %></h1>
+
+
+<p> <%=@project.description%> </p>
+
+
+<p><%= @project.amount=%></p>
+
+<% @applicants.each do |applicant| %>
+    <li><%=applicant.name%>  <%=link_to 'View Profile',profile_path(applicant) %></li>
+    <%=link_to "Accept",accept_project_path(project_id:@project,account_id: applicant) %> - <%=link_to "Reject" %>
+    <hr>
+<% end %>
+
+<%= link_to "Apply Project",apply_project_path(@project) %>
+
+<%= link_to "Edit",edit_project_path(@project)%>
+
+<%=link_to "Destroy", project_path(@project),data:{
+    turbo_method: :delete,
+    turbo_confirm: "Are you sure?"
+}
+ %>
+

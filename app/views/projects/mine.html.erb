@@ -1,0 +1,18 @@
+
+<h1>My Project</h1>
+
+<p> Account Type - <%=@account.account_type%> </p>
+
+
+<% @account.projects.each do |project| %>
+    <%= project.name %>
+    <%=project.description%>
+
+    <%= link_to "View #{project.name}",project_path(project) %>
+
+
+
+<% end %>
+
+
+

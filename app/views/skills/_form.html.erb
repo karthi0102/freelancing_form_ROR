@@ -1,0 +1,18 @@
+<%= form_with model: [@account ,@account.skills.build ],url:new_account_skill_path do |form|%>
+
+
+<p>
+    <%= form.label :name%><br>
+    <%= form.text_field :name%>
+</p>
+
+<p>
+  <%= form.label :level %><br>
+  <%= form.select :level, ['Beginner', 'Intermediate', 'Advanced'], selected: 'Intermediate' %>
+</p>
+
+<p>
+    <%= form.submit %>
+</p>
+
+<%end%>

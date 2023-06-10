@@ -1,0 +1,2 @@
+class AccountTeam < ApplicationRecord
+end

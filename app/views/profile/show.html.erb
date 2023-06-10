@@ -1,0 +1,30 @@
+<h1>Profile</h1>
+
+<p> <%= @account.name %> </p>
+
+<p> <%= @account.email %> </p>
+
+<p> <%= @account.phone %> </p>
+
+<p> <%= @account.account_type%> </p>
+
+<%= image_tag(@account.image, :alt => "rss feed") %>
+
+
+<%= link_to "View My Projects",my_projects_path(@account) %>
+
+<% unless @account.account_type!="freelancer"  %>
+
+<h1>Skills</h1>
+
+<% @skills.each do |skill| %>
+    <li><%=skill.name%> - <%=skill.level %></li>
+<%end %>
+
+
+<h1>Add Skills</h1>
+
+
+<%= render '/skills/form' %>
+
+<% end %>
