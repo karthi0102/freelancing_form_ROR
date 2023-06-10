@@ -15,16 +15,22 @@
 
 <% unless @account.account_type!="freelancer"  %>
 
-<h1>Skills</h1>
+        <h1>Skills</h1>
 
-<% @skills.each do |skill| %>
-    <li><%=skill.name%> - <%=skill.level %></li>
-<%end %>
-
-
-<h1>Add Skills</h1>
+        <% @skills.each do |skill| %>
+            <li><%=skill.name%> - <%=skill.level %></li>
+        <%end %>
 
 
-<%= render '/skills/form' %>
+        <h1>Add Skills</h1>
+
+
+        <%= render '/skills/form' %>
+
+
+        <% @account.teams.each do |team|  %>
+            <%= team.name %>
+            <%= link_to "View Team",team_path(team) %>
+        <% end %>
 
 <% end %>

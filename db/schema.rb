@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_09_084820) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_10_162827) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,13 +61,49 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_084820) do
   end
 
   create_table "applicants", force: :cascade do |t|
-    t.bigint "account_id", null: false
+    t.string "status"
+    t.string "applicable_type"
+    t.bigint "applicable_id"
     t.bigint "project_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "status"
-    t.index ["account_id"], name: "index_applicants_on_account_id"
+    t.index ["applicable_type", "applicable_id"], name: "index_applicants_on_applicable"
     t.index ["project_id"], name: "index_applicants_on_project_id"
+  end
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.integer "rating"
+    t.string "comment"
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_feedbacks_on_account_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.float "amount"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "project_members", force: :cascade do |t|
+    t.string "memberable_type"
+    t.bigint "memberable_id"
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["memberable_type", "memberable_id"], name: "index_project_members_on_memberable"
+    t.index ["project_id"], name: "index_project_members_on_project_id"
+  end
+
+  create_table "project_statuses", force: :cascade do |t|
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.bigint "project_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_statuses_on_project_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -90,6 +126,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_084820) do
     t.index ["account_id"], name: "index_skills_on_account_id"
   end
 
+  create_table "team_admins", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_team_admins_on_account_id"
+    t.index ["team_id"], name: "index_team_admins_on_team_id"
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -99,8 +144,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_09_084820) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "applicants", "accounts"
   add_foreign_key "applicants", "projects"
+  add_foreign_key "feedbacks", "accounts"
+  add_foreign_key "project_members", "projects"
+  add_foreign_key "project_statuses", "projects"
   add_foreign_key "projects", "accounts"
   add_foreign_key "skills", "accounts"
+  add_foreign_key "team_admins", "accounts"
+  add_foreign_key "team_admins", "teams"
 end

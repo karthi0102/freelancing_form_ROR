@@ -1,5 +1,4 @@
 class Applicant < ApplicationRecord
   belongs_to :project
-  belongs_to :account
+  belongs_to :applicable, polymorphic: true
 end
-

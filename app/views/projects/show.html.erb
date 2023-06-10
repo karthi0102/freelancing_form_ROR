@@ -6,20 +6,65 @@
 
 
 <p><%= @project.amount=%></p>
+<hr>
 
-<% @applicants.each do |applicant| %>
-    <li><%=applicant.name%>  <%=link_to 'View Profile',profile_path(applicant) %></li>
-    <%=link_to "Accept",accept_project_path(project_id:@project,account_id: applicant) %> - <%=link_to "Reject" %>
-    <hr>
+
+<% @project.applicants.each do |applicant| %>
+        <% if applicant.status=="applied" %>
+        <div>
+            <p>Applicant Name = <%=applicant.applicable.name%>  </p>
+            <p><%=link_to 'View Profile',profile_path(applicant.applicable) %></p>
+            <p>Applicant Type - <%=applicant.applicable_type%> </p>
+
+            <div>
+                <%= link_to "Accept",accept_applicant_path(applicant_type: applicant.applicable_type,applicant_id: applicant ) %>  --- <%= link_to "Reject", reject_applicant_path(applicant_type: applicant.applicable_type, applicant_id: applicant) %>
+            </div>
+            <hr>
+        </div>
+        <% end %>
+
 <% end %>
 
-<%= link_to "Apply Project",apply_project_path(@project) %>
+<hr>
 
+<div>
+    <h5>Apply Project</h5>
+    <%= link_to "Apply Project",apply_project_account_path(@project) %>
+
+
+
+</div>
+
+
+<hr>
+<div>
+  <h1>Apply via Team</h1>
+  <div>
+    <% @account.teams.each do |team|%>
+        <div>
+           <h5><%=team.name%> - <%=link_to "View Team",team_path(team) %></h5>
+           <p><%= link_to "Apply via team #{team.name}" ,apply_project_team_path(project_id: @project, team_id: team) %></p>
+        </div>
+    <% end %>
+  </div>
+
+</div>
+
+<hr>
+
+<div>
 <%= link_to "Edit",edit_project_path(@project)%>
-
 <%=link_to "Destroy", project_path(@project),data:{
     turbo_method: :delete,
     turbo_confirm: "Are you sure?"
 }
  %>
+</div>
 
+
+
+
+
+<hr>
+
+<h1>project Members</h1>

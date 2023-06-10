@@ -1,0 +1,25 @@
+<h1>
+    Create New Team
+</h1>
+
+
+<%= form_with model: @team do |form| %>
+  <div>
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+
+  </div>
+
+  <div>
+    <%= form.label :description %><br>
+    <%= form.text_area :description %><br>
+  </div>
+  <div>
+    <%=form.label :image %> <br>
+    <%= form.file_field :image %>
+  </div>
+  
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

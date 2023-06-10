@@ -4,11 +4,7 @@ class ProjectsController < ApplicationController
   end
   def show
     @project = Project.find(params[:id])
-    @applicants=[]
-    @project.applicants.each do |applicant|
-      accnt = Account.find(applicant.account_id);
-      @applicants<<accnt
-    end
+    @account = Account.last
   end
   def new
     @project = Project.new
@@ -53,13 +49,12 @@ class ProjectsController < ApplicationController
     @account = Account.find(params[:id])
   end
 
-  def add_applicant
+  def add_account_applicant
       @project = Project.find(params[:id])
       if @project
         @account = Account.last
-        @applicant =  Applicant.new({"status":"applied"})
+        @applicant =  @account.applicants.create(status:"applied")
         @project.applicants<<@applicant
-        @account.applicants<<@applicant
         @applicant.save
         @project.save
         @account.save
@@ -69,9 +64,40 @@ class ProjectsController < ApplicationController
       end
   end
 
-  def accept
-    @project =
+  def add_team_applicant
+    @project = Project.find(params[:project_id]);
+    if @project
+      @team = Team.find(params[:team_id])
+      @applicant=@team.applicants.create(status:"applied")
+      @project.applicants<<@applicant
+      @applicant.save
+      @project.save
+      @team.save
+      redirect_to team_path(@team)
+    else
+      redirect_to project_path(@project)
+    end
   end
+
+  def accept
+      @applicant = Applicant.find(params[:applicant_id])
+      @project = @applicant.project
+      @applicant.status="accepted"
+      @applicant.save
+      redirect_to profile_path(@applicant.applicable)
+  end
+
+
+
+  def reject
+    @applicant = Applicant.find(params[:applicant_id])
+    @project = @applicant.project
+    @applicant.status="rejected"
+    @applicant.save
+    redirect_to profile_path(@applicant.applicable)
+  end
+
+
 
   private
 
