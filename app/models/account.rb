@@ -5,5 +5,6 @@ class Account < ApplicationRecord
   has_and_belongs_to_many :teams
   has_many :applicants , as: :applicable
   has_many :team_admins
+  has_many :project_members , as: :memberable
 end
 

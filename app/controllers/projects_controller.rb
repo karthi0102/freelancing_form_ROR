@@ -80,10 +80,20 @@ class ProjectsController < ApplicationController
   end
 
   def accept
+      applicant_type=params[:applicant_type]
+      applicant_id=params[:applicable_id]
       @applicant = Applicant.find(params[:applicant_id])
       @project = @applicant.project
-      @applicant.status="accepted"
-      @applicant.save
+      if applicable_type=="account"
+        @applicant.status="accepted"
+        @applicant.save
+        @project_status = ProjectStatus.new({start_date:DateTime.now})
+        @project.project_status=@project_status
+        @project.save
+        @project_status.save
+      else
+
+      end
       redirect_to profile_path(@applicant.applicable)
   end
 

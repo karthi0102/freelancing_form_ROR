@@ -1,2 +1,3 @@
 class ProjectStatus < ApplicationRecord
+  
 end
