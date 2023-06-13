@@ -6,41 +6,30 @@
 
 
 <p><%= @project.amount=%></p>
+
+<p>Created by - <%= @project.client.account.name%> <%= link_to "View Profile" ,client_profile_path(@project.client)%></p>
 <hr>
 
 
-<% @project.applicants.each do |applicant| %>
-        <% if applicant.status=="applied" %>
-        <div>
-            <p>Applicant Name = <%=applicant.applicable.name%>  </p>
-            <p><%=link_to 'View Profile',profile_path(applicant.applicable) %></p>
-            <p>Applicant Type - <%=applicant.applicable_type%> </p>
 
-            <div>
-                <%= link_to "Accept",accept_applicant_path(applicant_type: applicant.applicable_type,applicant_id: applicant ) %>  --- <%= link_to "Reject", reject_applicant_path(applicant_type: applicant.applicable_type, applicant_id: applicant) %>
-            </div>
-            <hr>
-        </div>
-        <% end %>
 
-<% end %>
 
-<hr>
 
+<% f = @project.applicants.where(applicable_id:Freelancer.first.id,applicable_type:"Freelancer") %>
+<% if f.length == 0 %>
 <div>
-    <h5>Apply Project</h5>
-    <%= link_to "Apply Project",apply_project_account_path(@project) %>
+    <%= button_to "Apply Project as Freelancer",apply_project_freelancer_path(@project) ,method: :post ,class:"btn btn-primary" %>
 </div>
-
+<% end %>
 
 <hr>
 <div>
   <h1>Apply via Team</h1>
   <div>
-    <% @account.teams.each do |team|%>
+    <% @freelancer.teams.each do |team|%>
         <div>
            <h5><%=team.name%> - <%=link_to "View Team",team_path(team) %></h5>
-           <p><%= link_to "Apply via team #{team.name}" ,apply_project_team_path(project_id: @project, team_id: team) %></p>
+           <p><%= button_to "Apply via team #{team.name}" ,apply_project_team_path(project_id: @project, team_id: team),method: :post  %></p>
         </div>
     <% end %>
   </div>
@@ -59,9 +48,71 @@
 </div>
 
 
+<hr>
+
+<h1>Appliers</h1>
+
+<div>
+
+    <% @project.applicants.each do |applicant| %>
+        <div>
+            <% if applicant.status=="applied" %>
+            <% if applicant.applicable_type=="Freelancer"%>
+             <p>
+                <%= applicant.applicable.account.name %>
+                <%=link_to "View Profile",freelancer_profile_path(applicant.applicable)%>
+             </p>
+             <p>
+
+             </p>
+            <%elsif applicant.applicable_type=="Team"%>
+            <p>
+                <%= applicant.applicable.name%>
+                <%= link_to "View Team" ,team_path(applicant.applicable) %>
+
+            </p>
+
+            <%end%>
+            <%= button_to "Accept",accept_applicant_path(applicant) ,method: :post,class:"btn btn-success my-3 d-inline-block" %>
+            <%= button_to "Reject",reject_applicant_path(applicant) ,method: :post ,class:"btn btn-danger d-inline-block" %>
+            <%end%>
+        </div>
+    <% end %>
+</div>
 
 
 
 <hr>
 
-<h1>project Members</h1>
+<h1>Project Members</h1>
+
+
+
+<div>
+    <% @project.project_members.each do |member| %>
+        <div>
+            <% if member.memberable_type=="Freelancer" %>
+                <p><%= member.memberable.account.name %></p>
+                <%=link_to "View Profile",freelancer_profile_path(member.memberable)%>
+                <%= link_to "Provide feedback",new_feedback_path(to:member.memberable_id,to_type:member.memberable_type,from:@project.client,from_type:"Client"),class:"btn btn-primary" %>
+            <% elsif member.memberable_type =="Team" %>
+                <p><%= member.memberable.name %></p>
+                <%= link_to "View Team" ,team_path(member.memberable) %>
+                <%= link_to "Provide feedback",new_team_feedback_path(to:member.memberable_id,from:@project.client),class:"btn btn-primary" %>
+            <% end%>
+        </div>
+    <% end %>
+</div>
+
+
+<p>
+    <%= button_to "Mark as Completed" ,project_complete_status_path(@project),method: :patch %>
+</p>
+
+
+
+<hr>
+
+<p>
+    <%=link_to "Procced to payment" , payment_new_path(@project) %>
+</p>

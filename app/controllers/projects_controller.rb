@@ -2,26 +2,26 @@ class ProjectsController < ApplicationController
   def index
     @projects = Project.all
   end
+
   def show
     @project = Project.find(params[:id])
-    @account = Account.last
+    @freelancer = Freelancer.first
   end
+
   def new
     @project = Project.new
   end
 
   def create
-    @account = Account.first
-    if @account.account_type=="client"
-      @project_details = project_params
-      @project_details["status"]="created"
-      @project = @account.projects.create(@project_details)
-      if @account.save and @project.save
-        redirect_to @project
-      else
-        render :new ,status: :unprocessable_entity
-      end
-  end
+    @client = Client.first
+    @project_details = project_params
+    @project = @client.projects.create(@project_details)
+    if @client.save and @project.save
+      redirect_to @project
+    else
+      render :new ,status: :unprocessable_entity
+    end
+
   end
 
   def edit
@@ -49,16 +49,16 @@ class ProjectsController < ApplicationController
     @account = Account.find(params[:id])
   end
 
-  def add_account_applicant
+  def add_freelancer_applicant
       @project = Project.find(params[:id])
       if @project
-        @account = Account.last
-        @applicant =  @account.applicants.create(status:"applied")
+        @freelancer = Freelancer.first
+        @applicant =  @freelancer.applicants.create(status:"applied")
         @project.applicants<<@applicant
         @applicant.save
         @project.save
-        @account.save
-        redirect_to profile_path(@account)
+        @freelancer.save
+        redirect_to project_path(@project)
       else
         redirect_to project_path(@project)
       end
@@ -80,21 +80,40 @@ class ProjectsController < ApplicationController
   end
 
   def accept
-      applicant_type=params[:applicant_type]
       applicant_id=params[:applicable_id]
       @applicant = Applicant.find(params[:applicant_id])
-      @project = @applicant.project
-      if applicable_type=="account"
-        @applicant.status="accepted"
-        @applicant.save
-        @project_status = ProjectStatus.new({start_date:DateTime.now})
-        @project.project_status=@project_status
-        @project.save
-        @project_status.save
-      else
+      applicant_type = @applicant.applicable_type
 
+      @project = @applicant.project
+      @applicant.status="accepted"
+
+      unless @project.project_status
+        @project_status = ProjectStatus.new(start_date:DateTime.now,project: @project,status: "on-process")
+        @project_status.save
       end
-      redirect_to profile_path(@applicant.applicable)
+
+      if applicant_type=="Freelancer"
+        @freelancer = Freelancer.find(@applicant.applicable_id)
+        @project_member =@freelancer.project_members.create();
+        @project.project_members<<@project_member
+        @project_member.save
+
+        @freelancer.save
+        @project.save
+
+      elsif applicant_type=="Team"
+        @team = Team.find(@applicant.applicable_id)
+        @project_member =@team.project_members.create();
+        @project.project_members<<@project_member
+        @project_member.save
+        @team.save
+        @project.save
+      end
+
+      @applicant.save
+      @project.save
+
+      redirect_to project_path(@project)
   end
 
 
@@ -104,9 +123,23 @@ class ProjectsController < ApplicationController
     @project = @applicant.project
     @applicant.status="rejected"
     @applicant.save
-    redirect_to profile_path(@applicant.applicable)
+    redirect_to profile_path(@applicant.project)
   end
 
+
+  def completed
+    @project = Project.find(params[:id])
+    if @project
+      project_status = @project.project_status
+      project_status.status="completed"
+      project_status.end_date=DateTime.now
+      project_status.save
+      @payment = Payment.new(amount:@project.amount,status:"pending")
+      @payment.project_status=project_status
+      @payment.save
+      redirect_to new_feedback_path(to:@project.client.id,to_type:"Client",from:Freelancer.first.id,from_type:"Creelancer")
+    end
+  end
 
 
   private

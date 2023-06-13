@@ -1,0 +1,16 @@
+<h1>All Teams</h1>
+
+<div>
+    <% @teams.each do |team| %>
+        <div>
+            <%= team.name %>
+            <br />
+            <%= team.description %>
+            <br />
+            <%= link_to "View Team" ,team_path(team) %>
+            <br />
+            <%=button_to "Join Team",join_team_path(team_id: team),method: :post %>
+            <hr />
+        </div>
+    <% end %>
+</div>

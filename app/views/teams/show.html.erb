@@ -6,16 +6,19 @@
 <h1><%= @team.name %></h1>
 
 
-<p> Created by - <%=@team.team_admin.account.name%> </p>
+<p> Created by - <%= @team.team_admin.freelancer.account.name %> </p>
 
-<%= link_to "View Admin Profile" , profile_path(@team.team_admin.account.id) %>
+<%= link_to "View Admin Profile" , freelancer_profile_path(@team.team_admin.freelancer.id) %>
 
 
 <h1>Team Members</h1>
 
-<% @team.accounts.each do |account| %>
+<% @team.freelancers.each do |freelancer| %>
      <div>
-        <h1><%=account.name%> -  <%=link_to "View Profile" ,profile_path(account)%> </h1>
+        <p><%=freelancer.account.name%> -  <%=link_to "View Profile" ,client_profile_path(freelancer)%> </p>
+        <p>
+            <%= button_to "Remove #{freelancer.account.name}" ,remove_freelancer_path(freelancer_id: freelancer ,team_id: @team) ,method: :post %>
+        </p>
         <hr>
      </div>
 <%end%>

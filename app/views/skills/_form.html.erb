@@ -1,5 +1,9 @@
-<%= form_with model: [@account ,@account.skills.build ],url:new_account_skill_path do |form|%>
+<%= form_with model: [@freelancer ,@freelancer.skills.build ],url:new_freelancer_skill_path do |form|%>
 
+<p>
+  <%=form.hidden_field "to", value:@to%>
+  <%=form.hidden_field "from",value:@from%>
+</p>
 
 <p>
     <%= form.label :name%><br>

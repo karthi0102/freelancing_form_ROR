@@ -1,3 +1,3 @@
 class Skill < ApplicationRecord
-  belongs_to :account
+  belongs_to :freelancer
 end

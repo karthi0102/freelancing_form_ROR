@@ -1,0 +1,27 @@
+<h1>Provide a Feedback</h1>
+
+<%= form_with model:@feedback ,url: feedback_new_path do |form|  %>
+
+  <p>
+    <%=form.hidden_field 'to', value:@to %>
+    <%=form.hidden_field 'to_type',value:@to_type %>
+    <%=form.hidden_field 'from',value:@from%>
+    <%=form.hidden_field 'from_type',value:@from_type%>
+  </p>
+<p>
+    <%= form.label :comment%><br>
+    <%= form.text_area :comment%>
+</p>
+<p>
+  <%= form.label :rating %><br>
+  <%= form.select :rating, [1,2,3,4,5], selected:3 %>
+</p>
+
+<p>
+    <%= form.submit %>
+</p>
+<% end %>
+
+
+
+

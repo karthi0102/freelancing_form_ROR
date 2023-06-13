@@ -5,22 +5,28 @@ class ClientRegistrationController < ApplicationController
 
   end
   def create
-    @user_datas = client_details_params
-    @user_datas["account_type"]="client"
-    @user_datas["github"]=nil
-    image = @user_datas["image"]
-    @user_datas.delete("image")
-    @account = Account.new(@user_datas)
-    if @account.save
-      @account.image.attach(image)
-      redirect_to profile_path(@account)
+    @client_data=client_details_params
+    company = @client_data["company"]
+    company_location = @client_data["company_location"]
+    image= @client_data["image"]
+    @client_data.delete("company")
+    @client_data.delete("company_location")
+    @client_data.delete("image")
+    @client = Client.new(company: company ,company_location: company_location)
+    @account = Account.new(@client_data)
+    @account.image.attach(image)
+    @client.account=@account
+    if @client.save and @account.save
+      redirect_to root_path
     else
       render :new ,status: :unprocessable_entity
     end
+
+
   end
 
   private
   def client_details_params
-    params.require(:account).permit( :name, :email, :phone, :image, :password, :linkedin, :gender ,:account_type )
+    params.require(:account).permit( :name, :email, :phone, :image, :password, :linkedin, :gender ,:description , :company , :company_location  )
   end
 end

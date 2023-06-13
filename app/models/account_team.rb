@@ -1,2 +1,0 @@
-class AccountTeam < ApplicationRecord
-end

@@ -1,11 +1,11 @@
 class SkillsController < ApplicationController
     def create
-      @account=Account.last
-      if @account and @account.account_type=="freelancer"
-        @skill = @account.skills.create(skill_params)
-        @account.save
+      @freelancer=Freelancer.first
+      if @freelancer
+        @skill = @freelancer.skills.create(skill_params)
+        @freelancer.save
         @skill.save
-        redirect_to profile_path(@account)
+        redirect_to freelancer_profile_path(@freelancer)
       end
     end
 

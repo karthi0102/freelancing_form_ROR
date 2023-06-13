@@ -1,0 +1,25 @@
+<!-- app/views/payments/new.html.erb -->
+
+<h1>Make a Payment</h1>
+
+<%= form_with url: payment_path, local: true do |form| %>
+
+  <div>
+    <%=form.hidden_field "id",value:@project.id%>
+  </div>
+
+
+  <label for="card_number">Card Number</label>
+  <%= form.text_field :card_number, required: true %>
+
+  <label for="card_expiry">Expiration Date</label>
+  <%= form.text_field :card_expiry, required: true %>
+
+  <label for="card_cvc">CVC</label>
+  <%= form.text_field :card_cvc ,required: true %>
+
+  <label for="card_number">Amount</label>
+  <%= form.text_field :amount,value:@project.amount, disabled:true %>
+
+  <%= form.submit "Pay Now" %>
+<% end %>

@@ -1,0 +1,44 @@
+
+<h1>Freelancer Profile</h1>
+
+<p><%=@freelancer.account.name %></p>
+<p><%=@freelancer.account.email %></p>
+<p><%=@freelancer.account.phone %></p>
+<p><%=@freelancer.account.gender %></p>
+
+
+<div>
+    <%= image_tag(@freelancer.account.image ,:alt =>"not found") %>
+</div>
+
+
+<h1>My Teams</h1>
+
+
+<div>
+    <% @freelancer.teams.each do |team| %>
+        <div>
+            <p><%=team.name%></p>
+            <%= link_to "View Team",team_path(team) %>
+            <hr>
+        </div>
+    <% end %>
+</div>
+
+
+<h1>Add Skills</h1>
+
+<p>My Skills</p>
+
+<div>
+        <% @freelancer.skills.each do |skill|%>
+            <div>
+                <%= skill.name %> - <%=skill.level%>
+            </div>
+        <% end %>
+</div>
+
+<hr>
+
+
+<%= render "skills/form" %>
