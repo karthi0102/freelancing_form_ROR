@@ -1,13 +1,12 @@
-<h1>Profile</h1>
-
-<p> <%= @client.account.name %> </p>
-
-<p> <%= @client.account.email %> </p>
-
-<p> <%= @client.account.phone %> </p>
+<%= render "header",user:@client%>
 
 
 
-<%= image_tag(@client.account.image, :alt => "rss feed") %>
-
-
+<div class="container">
+    <div class="card shadow my-3">
+        <div class="card-body">
+            <p>Company Name : <%=@client.company%></p>
+            <p>Company Location : <%=@client.company_location%></p>
+        </div>
+    </div>
+</div>

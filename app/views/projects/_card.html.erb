@@ -1,0 +1,27 @@
+
+<style>
+    .project_created_by_image{
+        height: 48px;
+        width: 48px;
+        border-radius: 50%;
+    }
+</style>
+
+<div class="col-12 my-3">
+        <div class="card">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h4><%=project.name%></h4>
+                    <p>
+                        <%=project.description %>
+                    </p>
+                    <div>
+                        <p>
+                            Posted By - <%= image_tag(project.client.account.image,class:"img-fluid img-thumbnail rounded project_created_by_image" )%> <%= project.client.account.name %>
+                        </p>
+                    </div>
+                    <%= link_to "View Project",project_path(project),class:"btn btn-primary text-light btn-sm" %>
+                </div>
+            </div>
+        </div>
+</div>

@@ -73,7 +73,7 @@ class ProjectsController < ApplicationController
       @applicant.save
       @project.save
       @team.save
-      redirect_to team_path(@team)
+     
     else
       redirect_to project_path(@project)
     end
@@ -123,7 +123,7 @@ class ProjectsController < ApplicationController
     @project = @applicant.project
     @applicant.status="rejected"
     @applicant.save
-    redirect_to profile_path(@applicant.project)
+    redirect_to project_path(@applicant.project)
   end
 
 
@@ -134,9 +134,11 @@ class ProjectsController < ApplicationController
       project_status.status="completed"
       project_status.end_date=DateTime.now
       project_status.save
-      @payment = Payment.new(amount:@project.amount,status:"pending")
-      @payment.project_status=project_status
-      @payment.save
+      unless project.payment
+        @payment = Payment.new(amount:@project.amount,status:"pending")
+        @payment.project_status=project_status
+        @payment.save
+      end
       redirect_to new_feedback_path(to:@project.client.id,to_type:"Client",from:Freelancer.first.id,from_type:"Creelancer")
     end
   end

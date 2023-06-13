@@ -1,17 +1,28 @@
+<style>
+    .floating_button{
+        position:absolute;
+        bottom:20px;
+        right:20px;
+        width: fit-content;
+        border-radius: 50%;
 
+    }
+</style>
 
 <div class="container">
 
-    <h1>View App projects</h1>
+    <div class="my-3">
 
-    <div>
-        <% @projects.each do |project| %>
-            <p><%=project.name%></p>
-            <p><%=project.description%></p>
-            <p><%=project.amount%></p>
-            <%=link_to "View #{project.name}",project%>
-        <% end %>
+        <h1>All Projects</h1>
+
+        <div class="row">
+            <% @projects.each do |project| %>
+                <%= render "card" ,project: project %>
+            <% end %>
+        </div>
     </div>
 
-    <%= link_to "Add Project",new_project_path,class:"btn btn-primary" %>
+    <div class="floating_button">
+        <%= link_to "+",new_project_path,class:"btn btn-success  floating_button" %>
+    </div>
 </div>

@@ -1,0 +1,45 @@
+<style>
+    .team_img{
+        height:250px;
+        width: 250px;
+    }
+    .team_img > img{
+        height: 100%;
+        width:100%;
+        object-fit:cover;
+    }
+</style>
+
+<div class="col-12">
+    <div class="card shadow">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="team_img">
+                        <%=image_tag(team.image)%>
+                    </div>
+
+                </div>
+                <div class="col-6">
+                    <p ><strong>Team Name:</strong><%= team.name %></p>
+                    <p class="my-1"><strong>Description:</strong></p>
+                    <p><%= team.description %></p>
+
+                    <p><%= link_to "View Team" ,team_path(team),class:"btn btn-sm btn-info" %></p>
+                    <p class="my-1"><strong>Created By</strong></p>
+                    <div class="d-flex gap-2 align-items-end ">
+                        <div>
+                            <%= image_tag(team.team_admin.freelancer.account.image,class:"img-fluid rounded img-thumbnail team_admin_img")%>
+                        </div>
+                        <div>
+                            <p><%=team.team_admin.freelancer.account.name%></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+                </div>
+            </div>
+        </div>

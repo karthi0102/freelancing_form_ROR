@@ -1,0 +1,28 @@
+
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <%= form_with model: team do |form| %>
+          <div class="my-3 form-group">
+            <%= form.label :name, class:"form-label" %>
+            <%= form.text_field :name, class:"form-control",required:true %>
+          </div>
+
+          <div class="my-3 form-group">
+            <%= form.label :description,class:"form-label" %><br>
+            <%= form.text_area :description,class:"form-control",required:true %>
+          </div>
+          <div class="my-3 form-group">
+            <%=form.label :image,class:"form-label" %>
+            <%= form.file_field :image,class:"form-control",required:img %>
+          </div>
+
+          <div class="my-3 form-group">
+            <%= form.submit button ,class:"btn btn-success" %>
+          </div>
+        <% end %>
+
+    </div>
+</div>
+

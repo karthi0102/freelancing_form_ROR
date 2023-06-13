@@ -1,0 +1,38 @@
+<div class="bg-primary text-light p-3 mb-5">
+    <div class="container">
+
+
+    <p> <strong>Title : </strong><%= @project.name %></p>
+
+
+    <p><strong>Description : </strong> <%=@project.description%> </p>
+
+
+    <p><strong>Amount : </strong><%= @project.amount=%></p>
+
+    <p>Created by : </p>
+    <p> <%= image_tag(@project.client.account.image,class:"img-fluid rounded img-thumbnail show_client_img")%> <%= @project.client.account.name%> </p>
+    <p><%= link_to "View Profile" ,client_profile_path(@project.client),class:"btn btn-light btn-sm"%></p>
+
+    <hr class="bg-light text-light">
+        <div class="d-flex gap-5">
+            <div>
+                <%= link_to "Edit project",edit_project_path(@project),class:"btn btn-sm btn-light"%>
+            </div>
+            <div>
+                <%=link_to "Delete", project_path(@project),data:{
+                    turbo_method: :delete,
+                    turbo_confirm: "Are you sure?"
+                },
+                class:"btn btn-sm btn-light"
+                %>
+            </div>
+            <div>
+                <p>
+                    <%=link_to "Procced to payment" , payment_new_path(@project) ,class:"btn btn-sm btn-light" %>
+                </p>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>

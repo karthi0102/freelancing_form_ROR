@@ -1,16 +1,19 @@
-<h1>All Teams</h1>
+<style>
+    .team_admin_img{
+        height: 48px;
+        width: 48px;
+    }
+</style>
 
-<div>
-    <% @teams.each do |team| %>
-        <div>
-            <%= team.name %>
-            <br />
-            <%= team.description %>
-            <br />
-            <%= link_to "View Team" ,team_path(team) %>
-            <br />
-            <%=button_to "Join Team",join_team_path(team_id: team),method: :post %>
-            <hr />
-        </div>
-    <% end %>
+
+<div class="container">
+
+    <h1 class="my-3" >All Teams</h1>
+    <div class="row my-3">
+        <% @teams.each do |team| %>
+            <%= render "card",team: team %>
+       <% end %>
+    </div>
+
 </div>
+

@@ -1,4 +1,11 @@
-<h1>Edit page</h1>
 
 
-<%= render "form", project: @project  %>
+
+<div class="container ">
+    <div class="row my-5 ">
+            <div class="col-6 offset-3 ">
+                <h1 class="text-center">Edit Project <%@project.name%></h1>
+                <%= render "form", project: @project ,button:"Edit Project"  %>
+            </div>
+    </div>
+</div>

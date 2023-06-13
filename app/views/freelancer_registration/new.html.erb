@@ -1,64 +1,95 @@
-<h1>Freelancer Registration</h1>
+<div class="container" >
+
+  <div class="row d-flex justify-content-center align-items-center my-5">
+
+    <div class="col-4 d-flex justify-content-center align-items-center flex-column">
+      <div>
+        <%=image_tag("logo.png", :alt=>"not found") %>
+      </div>
+      <div>
+         <h1 class="display-6">
+           Join With us as <br/> Freelancer
+         </h1>
+      </div>
+    </div>
+
+    <div class="col-8">
+      <div class="card">
+        <div class="card shadow">
+          <div class="card-body">
+
+            <%= form_with model:@account,url:freelancer_registration_path do |form| %>
+              <div class="my-3 form-group">
+                <%= form.label :name ,class:"form-label" %><br>
+                <%= form.text_field :name ,class:"form-control" ,required:true%>
+              </div>
+
+              <div class="my-3 form-group">
+                <%= form.label :email,class:"form-label" %><br>
+                <%= form.email_field :email ,class:"form-control",required:true%>
+              </div>
+
+              <div class="my-3 form-group">
+                <%= form.label :phone,class:"form-label" %><br>
+                <%= form.number_field :phone,class:"form-control",required:true %>
+              </div>
+
+              <div class="my-3 form-group">
+                <%= form.label :password,class:"form-label" %><br>
+                <%= form.password_field :password,class:"form-control",required:true %>
+              </div>
+
+              <div class="my-3 form-group">
+                <%= form.label :linkedin,class:"form-label" %><br>
+                <%= form.url_field :linkedin ,class:"form-control",required:true%>
+              </div>
 
 
-<%= form_with model:@account,url:freelancer_registration_path do |form| %>
-  <div>
-    <%= form.label :name %><br>
-    <%= form.text_field :name %>
+              <div class="my-3 form-group">
+                <%= form.label :github ,class:"form-label"%><br>
+                <%= form.url_field :github,class:"form-control",required:true %>
+              </div>
+
+              <div class="my-3 form-group">
+                <%= form.label :description,class:"form-label" %><br>
+                <%= form.text_area :description ,class:"form-control",required:true%>
+              </div>
+
+              <div class="my-3 form-group">
+                <%= form.label :experience,class:"form-label" %><br>
+                <%= form.text_area :experience ,class:"form-control",required:true%>
+              </div>
+
+
+
+
+              <div class="my-3 form-group">
+                <%=form.label :image,class:"form-label" %><br>
+                <%=form.file_field :image ,class:"form-control",required:true%>
+              </div>
+
+
+              <div class="my-3 form-group">
+                <%= form.label :gender,class:"form-label" %><br>
+                <%= form.select(:gender,@gender,{selected:"male"},{:class=>"form-control",:required=>true})%>
+              </div>
+
+
+              <div class="my-3 form-group">
+                <%= form.submit "Register as Freelancer",class:"btn btn-success" %>
+              </div>
+            <% end %>
+
+
+      </div>
+    </div>
+   </div>
   </div>
 
-  <div>
-    <%= form.label :email %><br>
-    <%= form.email_field :email %>
-  </div>
 
-  <div>
-    <%= form.label :phone %><br>
-    <%= form.number_field :phone %>
-  </div>
+ </div>
 
-  <div>
-    <%= form.label :password %><br>
-    <%= form.password_field :password %>
-  </div>
-
-  <div>
-    <%= form.label :linkedin %><br>
-    <%= form.url_field :linkedin %>
-  </div>
-
-
-  <div>
-    <%= form.label :github %><br>
-    <%= form.url_field :github %>
-  </div>
-
-  <div>
-    <%= form.label :description %><br>
-    <%= form.text_area :description %>
-  </div>
-
-  <div>
-    <%= form.label :experience %><br>
-    <%= form.text_area :experience %>
-  </div>
+</div>
 
 
 
-
-  <div>
-    <%=form.label :image %><br>
-    <%=form.file_field :image %>
-  </div>
-
-
-  <div>
-    <%= form.label :gender %><br>
-    <%= form.select :gender,@gender %>
-  </div>
-
-
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>

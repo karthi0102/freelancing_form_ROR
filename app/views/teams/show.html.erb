@@ -1,27 +1,28 @@
+<style>
+    .team_admin_img{
+        height: 48px;
+        width: 48px;
+    }
+</style>
 
-<div>
-    <%=image_tag(@team.image ,:alt=>"not found") %>
+<%= render "header" %>
+
+<div class="container">
+
+    <div class="card shadow my-3">
+        <div class="card-body">
+            <h1 class="text-center">Team Members</h1>
+            <div class="row">
+                <% @team.freelancers.each do |freelancer| %>
+                    <%=render "members" ,freelancer:freelancer %>
+                    
+                <%end%>
+            </div>
+        </div>
+    </div>
 </div>
 
-<h1><%= @team.name %></h1>
 
-
-<p> Created by - <%= @team.team_admin.freelancer.account.name %> </p>
-
-<%= link_to "View Admin Profile" , freelancer_profile_path(@team.team_admin.freelancer.id) %>
-
-
-<h1>Team Members</h1>
-
-<% @team.freelancers.each do |freelancer| %>
-     <div>
-        <p><%=freelancer.account.name%> -  <%=link_to "View Profile" ,client_profile_path(freelancer)%> </p>
-        <p>
-            <%= button_to "Remove #{freelancer.account.name}" ,remove_freelancer_path(freelancer_id: freelancer ,team_id: @team) ,method: :post %>
-        </p>
-        <hr>
-     </div>
-<%end%>
 
 
 

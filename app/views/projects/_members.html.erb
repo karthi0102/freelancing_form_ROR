@@ -1,0 +1,22 @@
+<div class="col-3">
+    <div class="card">
+        <div class="card-body">
+            <% if member.memberable_type=="Freelancer" %>
+            <p><strong>Name : </strong><%= member.memberable.account.name %></p>
+            <%=link_to "View Profile",freelancer_profile_path(member.memberable),class:"btn btn-sm btn-info"%>
+            <% unless member.feedback%>
+            <%= link_to "Provide feedback",new_feedback_path(to:member.memberable_id,to_type:member.memberable_type,from:@project.client,from_type:"Client"),class:"btn btn-sm btn-primary" %>
+            <% end %>
+        <% elsif member.memberable_type =="Team" %>
+            <p><%= member.memberable.name %></p>
+            <%= link_to "View Team" ,team_path(member.memberable),class:"btn btn-sm btn-info" %>
+            <% unless member.feedback %>
+            <%= link_to "Provide feedback",new_team_feedback_path(to:member.memberable_id,from:@project.client),class:" btn btn-sm  btn-primary" %>
+            <% end %>
+        <% end%>
+            <p>
+                <%= button_to "Mark as Completed" ,project_complete_status_path(@project),method: :patch,class:"btn btn-sm btn-success" %>
+            </p>
+        </div>
+    </div>
+</div>

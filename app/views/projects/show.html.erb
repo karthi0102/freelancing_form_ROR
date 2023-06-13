@@ -1,118 +1,93 @@
 
-<h1><%= @project.name %></h1>
+<style>
+    .show_client_img{
+        height:48px;
+        width: 48px;
+    }
+</style>
 
 
-<p> <%=@project.description%> </p>
 
-
-<p><%= @project.amount=%></p>
-
-<p>Created by - <%= @project.client.account.name%> <%= link_to "View Profile" ,client_profile_path(@project.client)%></p>
-<hr>
-
-
+<%= render "header"%>
 
 
 
 
-<% f = @project.applicants.where(applicable_id:Freelancer.first.id,applicable_type:"Freelancer") %>
-<% if f.length == 0 %>
-<div>
-    <%= button_to "Apply Project as Freelancer",apply_project_freelancer_path(@project) ,method: :post ,class:"btn btn-primary" %>
-</div>
-<% end %>
+<div class="container">
 
-<hr>
-<div>
-  <h1>Apply via Team</h1>
-  <div>
-    <% @freelancer.teams.each do |team|%>
-        <div>
-           <h5><%=team.name%> - <%=link_to "View Team",team_path(team) %></h5>
-           <p><%= button_to "Apply via team #{team.name}" ,apply_project_team_path(project_id: @project, team_id: team),method: :post  %></p>
+
+
+    <div class="card shadow my-4">
+
+
+
+            <div class="card-body">
+
+                <% if @project.applicants.where(applicable_id:Freelancer.first.id,applicable_type:"Freelancer").length==0 %>
+
+                <div>
+                    <h4>Apply as an Individual for this project</h4>
+                    <%= button_to "Apply Project as Freelancer",apply_project_freelancer_path(@project) ,method: :post ,class:"btn btn-primary btn-sm" %>
+                </div>
+                <hr>
+                <% end %>
+
+
+                <div>
+                    <h4>Apply as a Team</h4>
+                    <% @freelancer.teams.each do |team| %>
+                        <%= render "teams",team: team %>
+                    <% end%>
+                </div>
+
+            </div>
+
+
+
+    </div>
+
+
+
+    <div class="card shadow my-3">
+        <div class="card-body">
+            <h3>Applications</h3>
+            <div class="row">
+
+
+            <% @project.applicants.where(status:"applied").each do |applicant| %>
+                    <%= render "appliers",applicant:applicant,d:true %>
+            <% end %>
+
+            </div>
         </div>
-    <% end %>
-  </div>
+    </div>
 
-</div>
-
-<hr>
-
-<div>
-<%= link_to "Edit",edit_project_path(@project)%>
-<%=link_to "Destroy", project_path(@project),data:{
-    turbo_method: :delete,
-    turbo_confirm: "Are you sure?"
-}
- %>
-</div>
-
-
-<hr>
-
-<h1>Appliers</h1>
-
-<div>
-
-    <% @project.applicants.each do |applicant| %>
-        <div>
-            <% if applicant.status=="applied" %>
-            <% if applicant.applicable_type=="Freelancer"%>
-             <p>
-                <%= applicant.applicable.account.name %>
-                <%=link_to "View Profile",freelancer_profile_path(applicant.applicable)%>
-             </p>
-             <p>
-
-             </p>
-            <%elsif applicant.applicable_type=="Team"%>
-            <p>
-                <%= applicant.applicable.name%>
-                <%= link_to "View Team" ,team_path(applicant.applicable) %>
-
-            </p>
-
-            <%end%>
-            <%= button_to "Accept",accept_applicant_path(applicant) ,method: :post,class:"btn btn-success my-3 d-inline-block" %>
-            <%= button_to "Reject",reject_applicant_path(applicant) ,method: :post ,class:"btn btn-danger d-inline-block" %>
-            <%end%>
+    <div class="card shadow my-3">
+        <div class="card-body">
+            <h3>Rejected Applications</h3>
+            <div class="row">
+            <% @project.applicants.where(status:"rejected").each do |applicant| %>
+                    <%= render "appliers",applicant:applicant,d:false %>
+            <% end %>
+            </div>
         </div>
-    <% end %>
-</div>
+    </div>
 
 
 
-<hr>
+    <div class="card shadow my-3">
+        <div class="card-body">
+            <h3>Project Members</h3>
+            <div class="row">
+                <% @project.project_members.each do |member| %>
+                        <%= render "members" , member:member%>
 
-<h1>Project Members</h1>
-
-
-
-<div>
-    <% @project.project_members.each do |member| %>
-        <div>
-            <% if member.memberable_type=="Freelancer" %>
-                <p><%= member.memberable.account.name %></p>
-                <%=link_to "View Profile",freelancer_profile_path(member.memberable)%>
-                <%= link_to "Provide feedback",new_feedback_path(to:member.memberable_id,to_type:member.memberable_type,from:@project.client,from_type:"Client"),class:"btn btn-primary" %>
-            <% elsif member.memberable_type =="Team" %>
-                <p><%= member.memberable.name %></p>
-                <%= link_to "View Team" ,team_path(member.memberable) %>
-                <%= link_to "Provide feedback",new_team_feedback_path(to:member.memberable_id,from:@project.client),class:"btn btn-primary" %>
-            <% end%>
+                <% end %>
+            </div>
         </div>
-    <% end %>
+    </div>
+
+
 </div>
 
 
-<p>
-    <%= button_to "Mark as Completed" ,project_complete_status_path(@project),method: :patch %>
-</p>
-
-
-
-<hr>
-
-<p>
-    <%=link_to "Procced to payment" , payment_new_path(@project) %>
-</p>

@@ -1,0 +1,29 @@
+<style>
+    .user_img{
+        height: 250px;
+        width: 250px;
+        object-fit: cover;
+    }
+</style>
+
+
+<div class="bg-secondary text-light">
+    <div class="container p-3">
+        <div class="row">
+            <div class="col-3">
+                <%=image_tag(user.account.image,class:"img-thumbnail user_img")%>
+            </div>
+            <div class="col-6">
+                <p><strong>Name : </strong><%=user.account.name%></p>
+                <p><strong>Email : </strong><%=user.account.email%></p>
+                <p><strong>Phone no : </strong><%=user.account.phone%></p>
+                <p><strong>Gender : </strong><%=user.account.gender%></p>
+                <p><strong>Description</strong></p>
+                <p>
+                    <%=user.account.description%>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+<%= form_with model: @account,url: client_registration_path ,class: "row" do |form| %>
+<div class="my-3 col-6 form-group">
+  <%= form.label :name ,class:"form-label"%>
+  <%= form.text_field :name ,class:"form-control" ,required: true%>
+</div>
+
+<div class="my-3 col-6 form-group" >
+  <%= form.label :email,class:"form-label" %>
+  <%= form.email_field :email,class:"form-control",required: true %>
+</div>
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :phone ,class:"form-label"%>
+  <%= form.number_field :phone,class:"form-control",required: true %>
+</div>
+
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :gender,class:"form-label" %><br>
+  <%= form.select(:gender, @gender,{}, {:class=> "form-select",:required => true }) %>
+</div>
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :linkedin,class:"form-label" %>
+  <%= form.url_field :linkedin,class:"form-control",required: true %>
+</div>
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :company,class:"form-label" %>
+  <%= form.text_field :company,class:"form-control",required: true %>
+</div>
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :company_location,class:"form-label" %><br>
+  <%= form.text_field :company_location,class:"form-control",required: true %>
+</div>
+
+
+<div class="my-3 col-6 form-group">
+  <%=form.label :image,class:"form-label" %><br>
+  <%=form.file_field :image,class:"form-control",required: true %>
+</div>
+
+
+
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :password, class:"form-label"%>
+  <%= form.password_field :password ,class:"form-control",required: true%>
+</div>
+
+<div class="my-3 col-6 form-group">
+  <%= form.label :password_confirmation, class:"form-label"%>
+  <%= form.password_field :confirm_password_confirmation ,class:"form-control",required: true%>
+</div>
+
+
+<div class="my-3  form-group">
+  <%= form.label :description,class:"form-label" %><br>
+  <%= form.text_area :description,class:"form-control" ,required: true%>
+</div>
+<div class="my-3 form-group">
+  <%= form.submit "Register as Client",class:"btn btn-success" %>
+</div>
+<% end %>

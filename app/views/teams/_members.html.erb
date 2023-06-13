@@ -1,0 +1,32 @@
+<style>
+    .team_member_image{
+        height: 48px;
+        width: 48px;
+    }
+</style>
+
+<div class="col-3">
+    <div class="card">
+        <div class="card-body">
+                <div class="d-flex align-items-end gap-2 my-3">
+                    <div>
+                        <%=image_tag(freelancer.account.image,class:"img-thumbnail team_member_image")%>
+                    </div>
+                    <div>
+                        <p><%=freelancer.account.name%>  </p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <div>
+                        <%=link_to "View Profile" ,client_profile_path(freelancer),class:"btn btn-sm btn-info"%>
+                    </div>
+                    <div>
+                        <%= button_to "Remove #{freelancer.account.name}" ,remove_freelancer_path(freelancer_id: freelancer ,team_id: @team) ,method: :post,class:"btn btn-sm btn-danger" %>
+                    </div>
+                </div>
+
+
+
+        </div>
+    </div>
+</div>

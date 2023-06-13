@@ -1,0 +1,13 @@
+<div class="card shadow">
+    <div class="card-body">
+
+
+        <p class="m-0"> <%= team.name %> </p>
+        <p class="m-0"> <%=team.description%> </p>
+        <p> <%=link_to "View Team",team_path(team),class:"btn btn-sm btn-info text-light" %> </p>
+        <p>
+            <%= button_to "Apply via team #{team.name}" ,apply_project_team_path(project_id: @project, team_id: team),method: :post,class:"btn btn-sm btn-primary"  %>
+        </p>
+
+    </div>
+</div>

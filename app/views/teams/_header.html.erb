@@ -1,0 +1,60 @@
+<style>
+    .team_img{
+        height:230px;
+        width: 230px;
+    }
+    .team_img > img{
+        height: 100%;
+        width:100%;
+        object-fit:cover;
+    }
+</style>
+<div class="bg-primary text-light">
+    <div class="container p-3 ">
+        <div class="row">
+            <div class="col-3">
+                <div class="team_img">
+                    <%=image_tag(@team.image,class:"img-thumbnail")%>
+                </div>
+            </div>
+            <div class="col-6">
+                <p> <strong>Team Name : </strong> <%= @team.name %> </p>
+                <p><strong>Description : </strong> <%= @team.description %> </p>
+                <p><strong>Total Members : </strong> <%= @team.freelancers.length%> </p>
+                <p><strong>Created By</strong></p>
+                <div class="d-flex align-items-end gap-2 ">
+                    <div>
+                        <%=image_tag(@team.image ,class:"img-fluid rounded img-thumbnail team_admin_img")%>
+                    </div>
+                    <div>
+                        <p><%=@team.team_admin.freelancer.account.name%></p>
+                    </div>
+                </div>
+
+                <p class="my-3">
+                    <%= link_to "View Admin Profile",freelancer_profile_path(@team.team_admin.freelancer),class:"btn btn-sm btn-light"%>
+                </p>
+
+                <hr class="bg-light text-light">
+
+                <div class="d-flex align-items-center gap-2">
+                    <div>
+                        <%=link_to "Edit",edit_team_path(@team),class:"btn btn-sm btn-light"%>
+                    </div>
+                    <div>
+                        <%=link_to "destory",team_path(@team),data:{
+                            turbo_method: :delete,
+                            turbo_confirm: "Are you sure?"
+                        },class:"btn btn-sm btn-light" %>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <%=button_to "Join Team",join_team_path(team_id:@team),method: :post,class:"btn btn-sm btn-light"%>
+
+            </div>
+        </div>
+    </div>
+</div>

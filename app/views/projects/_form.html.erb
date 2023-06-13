@@ -1,24 +1,34 @@
-<%= form_with model: project do |form| %>
-  <div>
-    <%= form.label :name %><br>
-    <%= form.text_field :name %>
+
+
+
+<div class="card shadow my-3">
+  <div class="card-body">
+    <%= form_with model: project do |form| %>
+      <div class="my-3 form-group">
+        <%= form.label :name ,class:"form-label" %><br>
+        <%= form.text_field :name ,class:"form-control",required: true %>
+      </div>
+
+      <div class="my-3 form-group">
+        <%= form.label :description ,class:"form-label"  %><br>
+        <%= form.text_area :description ,class:"form-control",required: true  %><br>
+      </div>
+
+      <div class="my-3 form-group">
+        <%=form.label :image ,class:"form-label" %> <br>
+        <%= form.file_field :image ,class:"form-control",required: true  %>
+      </div>
+
+      <div class="my-3 form-group">
+        <%= form.label :amount ,class:"form-label" %><br>
+        <%= form.number_field :amount ,class:"form-control",required: true  %><br>
+      </div>
+
+      <div class="my-3 form-group">
+        <%= form.submit button,class:"btn btn-success" %>
+      </div>
+    <% end %>
 
   </div>
+</div>
 
-  <div>
-    <%= form.label :description %><br>
-    <%= form.text_area :description %><br>
-  </div>
-  <div>
-    <%=form.label :image %> <br>
-    <%= form.file_field :image %>
-  </div>
-  <div>
-    <%= form.label :amount %><br>
-    <%= form.number_field :amount %><br>
-  </div>
-
-  <div>
-    <%= form.submit %>
-  </div>
-<% end %>

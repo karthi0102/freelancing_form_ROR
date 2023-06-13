@@ -10,6 +10,8 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
+
+
   def create
     @freelancer = Freelancer.first
     @team_data = team_params
@@ -26,9 +28,30 @@ class TeamsController < ApplicationController
       @team_admin.save
       @team.save
       @freelancer.save
-
+      redirect_to team_path(@team)
+    else
+      render :new ,status: :unprocessable_entity
     end
-    redirect_to client_profile_path(@account)
+  end
+
+  def  edit
+    @team = Team.find(params[:id])
+  end
+
+  def update
+    @team = Team.find(params[:id])
+    if @team.update(team_params)
+        @team.save
+        redirect_to team_path(@team)
+    else
+      render :new ,status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @team = Team.find(params[:id])
+    @team.destroy
+    redirect_to teams_path ,status: :see_other
   end
 
   def join
