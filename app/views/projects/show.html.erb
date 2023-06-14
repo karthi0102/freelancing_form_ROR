@@ -55,7 +55,7 @@
 
 
             <% @project.applicants.where(status:"applied").each do |applicant| %>
-                    <%= render "appliers",applicant:applicant,d:true %>
+                    <%= render "appliers",applicant:applicant,d:true,project:@project %>
             <% end %>
 
             </div>

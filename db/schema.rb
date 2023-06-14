@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_13_043248) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_14_104512) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -78,12 +78,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_043248) do
   create_table "feedbacks", force: :cascade do |t|
     t.integer "rating"
     t.text "comment"
+    t.bigint "created_id"
+    t.bigint "recipient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "to"
-    t.integer "from"
-    t.string "from_type"
-    t.string "to_type"
+    t.index ["created_id"], name: "index_feedbacks_on_created_id"
+    t.index ["recipient_id"], name: "index_feedbacks_on_recipient_id"
   end
 
   create_table "freelancers", force: :cascade do |t|
@@ -103,7 +103,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_043248) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "paid_date"
+    t.jsonb "account_details", default: {"values"=>[]}, null: false
   end
 
   create_table "project_members", force: :cascade do |t|
@@ -113,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_043248) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "feedback"
+    t.string "status"
     t.index ["memberable_type", "memberable_id"], name: "index_project_members_on_memberable"
     t.index ["project_id"], name: "index_project_members_on_project_id"
   end
@@ -136,6 +137,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_043248) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "client_id"
+    t.boolean "available"
     t.index ["client_id"], name: "index_projects_on_client_id"
   end
 
@@ -148,30 +150,24 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_043248) do
     t.index ["freelancer_id"], name: "index_skills_on_freelancer_id"
   end
 
-  create_table "team_admins", force: :cascade do |t|
-    t.bigint "team_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "freelancer_id", null: false
-    t.index ["freelancer_id"], name: "index_team_admins_on_freelancer_id"
-    t.index ["team_id"], name: "index_team_admins_on_team_id"
-  end
-
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "admin_id"
+    t.index ["admin_id"], name: "index_teams_on_admin_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "applicants", "projects"
+  add_foreign_key "feedbacks", "accounts", column: "created_id"
+  add_foreign_key "feedbacks", "accounts", column: "recipient_id"
   add_foreign_key "project_members", "projects"
   add_foreign_key "project_statuses", "payments"
   add_foreign_key "project_statuses", "projects"
   add_foreign_key "projects", "clients"
   add_foreign_key "skills", "freelancers"
-  add_foreign_key "team_admins", "freelancers"
-  add_foreign_key "team_admins", "teams"
+  add_foreign_key "teams", "freelancers", column: "admin_id"
 end

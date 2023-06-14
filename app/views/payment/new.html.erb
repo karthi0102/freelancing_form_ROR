@@ -1,25 +1,50 @@
-<!-- app/views/payments/new.html.erb -->
 
-<h1>Make a Payment</h1>
 
-<%= form_with url: payment_path, local: true do |form| %>
+<div class="container">
+  <div class="row my-5">
+    <div class="col-6 offset-3">
+      <div class="card shadow">
+        <div class="card-body">
+          <h1 class="text-center">Make a Payment</h1>
 
-  <div>
-    <%=form.hidden_field "id",value:@project.id%>
+          <%= form_with url: payment_path, local: true do |form| %>
+
+            <div >
+              <%=form.hidden_field "project_id",value:@project.id%>
+              <%=form.hidden_field "member_id",value: @member.id %>
+            </div>
+            <div class="my-3 form-group">
+              <p><strong>Account Number : </strong><%=@account_details["account_number"]%></p>
+              <p><strong>IFSC Code :</strong><%=@account_details["ifsc_code"]%></p>
+            </div>
+            <div class="my-3 form-group">
+              <%=form.label :card_number,class:"form-label" %>
+              <%= form.text_field :card_number,class:"form-control" ,required: true %>
+            </div>
+
+            <div class="my-3 form-group">
+              <%=form.label :card_expiry,class:"form-label" %>
+              <%= form.text_field :card_expiry,class:"form-control", required: true %>
+            </div>
+
+            <div class="my-3 form-group">
+              <%=form.label :card_cvv,class:"form-label" %>
+              <%= form.text_field :card_cvv,class:"form-control" ,required: true %>
+            </div>
+
+            <div class="my-3 form-group">
+              <%= form.label :amount,class:"form-label" %>
+              <%= form.number_field :amount,class:"form-control",required:true %>
+            </div>
+
+
+            <%= form.submit "Pay Now",class:"btn btn-success" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
 
-  <label for="card_number">Card Number</label>
-  <%= form.text_field :card_number, required: true %>
 
-  <label for="card_expiry">Expiration Date</label>
-  <%= form.text_field :card_expiry, required: true %>
-
-  <label for="card_cvc">CVC</label>
-  <%= form.text_field :card_cvc ,required: true %>
-
-  <label for="card_number">Amount</label>
-  <%= form.text_field :amount,value:@project.amount, disabled:true %>
-
-  <%= form.submit "Pay Now" %>
-<% end %>

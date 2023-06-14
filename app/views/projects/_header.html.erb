@@ -27,10 +27,11 @@
                 class:"btn btn-sm btn-light"
                 %>
             </div>
-            <div>
+            <div class="d-flex gap-2">
                 <p>
-                    <%=link_to "Procced to payment" , payment_new_path(@project) ,class:"btn btn-sm btn-light" %>
+                    <%=button_to "Change Available(Current:#{@project.available})",set_available_status_path,class:"btn btn-light btn-sm",method: :patch%>
                 </p>
+               
             </div>
         </div>
         </div>

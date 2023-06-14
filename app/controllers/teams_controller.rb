@@ -10,23 +10,15 @@ class TeamsController < ApplicationController
     @team = Team.new
   end
 
-
-
   def create
     @freelancer = Freelancer.first
     @team_data = team_params
-    puts @team_data
-    image = @team_data["image"]
-    @team_data.delete("image")
+
     if @freelancer
-      @team = Team.new(@team_data)
-      @team.image.attach(image)
-      @team_admin = TeamAdmin.new();
-      @team.team_admin=@team_admin
-      @freelancer.team_admins<<@team_admin
-      @freelancer.teams<<@team
-      @team_admin.save
+      @team = Team.new(name:@team_data["name"],description:@team_data["description"],admin:@freelancer)
+      @team.image.attach(@team_data["image"])
       @team.save
+      @freelancer.teams<<@team
       @freelancer.save
       redirect_to team_path(@team)
     else

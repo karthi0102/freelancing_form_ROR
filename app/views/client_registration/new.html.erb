@@ -24,6 +24,10 @@
               <div class="my-3 col-6 form-group">
                 <%= form.label :name ,class:"form-label"%>
                 <%= form.text_field :name ,class:"form-control" ,required: true%>
+                <%= @account.errors.each do |message| %>'
+                <h1>hiii</h1>
+                  <div><%= message %></div>
+                <% end %>
               </div>
 
               <div class="my-3 col-6 form-group" >

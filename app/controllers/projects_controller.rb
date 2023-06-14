@@ -15,6 +15,7 @@ class ProjectsController < ApplicationController
   def create
     @client = Client.first
     @project_details = project_params
+    @project_details["available"]=true
     @project = @client.projects.create(@project_details)
     if @client.save and @project.save
       redirect_to @project
@@ -23,6 +24,8 @@ class ProjectsController < ApplicationController
     end
 
   end
+
+
 
   def edit
     @project = Project.find(params[:id])
@@ -73,31 +76,37 @@ class ProjectsController < ApplicationController
       @applicant.save
       @project.save
       @team.save
-     
+
     else
       redirect_to project_path(@project)
     end
   end
 
   def accept
-      applicant_id=params[:applicable_id]
-      @applicant = Applicant.find(params[:applicant_id])
+      @project = Project.find(params[:project_id])
+      @applicant = @project.applicants.find(params[:applicant_id])
       applicant_type = @applicant.applicable_type
-
-      @project = @applicant.project
+      @project= @applicant.project
       @applicant.status="accepted"
 
-      unless @project.project_status
-        @project_status = ProjectStatus.new(start_date:DateTime.now,project: @project,status: "on-process")
+      if @project.project_status==nil
+        @payment = Payment.new(amount:@project.amount,status:"pending")
+        @payment.save
+        @project_status = ProjectStatus.new(start_date:DateTime.now,status: "on-process",payment:@payment,project:@project)
+        @payment.project_status=@project_status
+        @project.project_status=@project_status
         @project_status.save
+        @payment.save
+        @project.save
+
       end
 
       if applicant_type=="Freelancer"
         @freelancer = Freelancer.find(@applicant.applicable_id)
         @project_member =@freelancer.project_members.create();
+        @project_member.status="on-process"
         @project.project_members<<@project_member
         @project_member.save
-
         @freelancer.save
         @project.save
 
@@ -105,6 +114,7 @@ class ProjectsController < ApplicationController
         @team = Team.find(@applicant.applicable_id)
         @project_member =@team.project_members.create();
         @project.project_members<<@project_member
+        @project_member.status="on-process"
         @project_member.save
         @team.save
         @project.save
@@ -127,22 +137,27 @@ class ProjectsController < ApplicationController
   end
 
 
-  def completed
-    @project = Project.find(params[:id])
+  def member_completed
+    @project = Project.find(params[:project_id])
     if @project
-      project_status = @project.project_status
-      project_status.status="completed"
-      project_status.end_date=DateTime.now
-      project_status.save
-      unless project.payment
-        @payment = Payment.new(amount:@project.amount,status:"pending")
-        @payment.project_status=project_status
-        @payment.save
+      @project_member = @project.project_members.find(params[:member_id])
+      if @project_member
+
+         @project_member.save
+         @project_status = @project.project_status
+
+         @project.save
+        redirect_to new_feedback_path(to:@project.client.id,to_type:"Client",from:Freelancer.first.id,from_type:"Freelancer")
       end
-      redirect_to new_feedback_path(to:@project.client.id,to_type:"Client",from:Freelancer.first.id,from_type:"Creelancer")
     end
   end
 
+  def set_available
+    @project = Project.find(params[:id])
+    @project.available=!@project.available
+    @project.save
+    redirect_to project_path(@project)
+  end
 
   private
 

@@ -2,20 +2,25 @@
     <div class="card">
         <div class="card-body">
             <% if member.memberable_type=="Freelancer" %>
-            <p><strong>Name : </strong><%= member.memberable.account.name %></p>
+            <p class="m-1"><strong>Name : </strong><%= member.memberable.account.name %></p>
+            <p class="m-1 "><strong>Status : </strong><%=member.status%></p>
             <%=link_to "View Profile",freelancer_profile_path(member.memberable),class:"btn btn-sm btn-info"%>
-            <% unless member.feedback%>
-            <%= link_to "Provide feedback",new_feedback_path(to:member.memberable_id,to_type:member.memberable_type,from:@project.client,from_type:"Client"),class:"btn btn-sm btn-primary" %>
+            <% if !member.feedback and member.status=="completed"%>
+            <%= link_to "Provide feedback",new_feedback_path(to:member.memberable.account,from:@project.client.account,member_id:member),class:"btn btn-sm btn-primary" %>
             <% end %>
         <% elsif member.memberable_type =="Team" %>
-            <p><%= member.memberable.name %></p>
+            <p class="m-1"><strong>Team Name : </strong><%= member.memberable.name %></p>
+            <p class="m-1 "><strong>Status : </strong><%=member.status%></p>
             <%= link_to "View Team" ,team_path(member.memberable),class:"btn btn-sm btn-info" %>
-            <% unless member.feedback %>
-            <%= link_to "Provide feedback",new_team_feedback_path(to:member.memberable_id,from:@project.client),class:" btn btn-sm  btn-primary" %>
+            <% if !member.feedback and member.status=="completed" %>
+            <%= link_to "Provide feedback",new_team_feedback_path(to:member.memberable,from:@project.client.account,member_id:member),class:" btn btn-sm  btn-primary" %>
             <% end %>
         <% end%>
             <p>
-                <%= button_to "Mark as Completed" ,project_complete_status_path(@project),method: :patch,class:"btn btn-sm btn-success" %>
+                <%= button_to "Mark as Completed" ,account_details_path(project_id: @project,member_id: member),method: :get,class:"btn btn-sm btn-success" %>
+            </p>
+            <p>
+                <%=link_to "Pay" ,payment_new_path(project_id:@project,member_id: member) ,class:"btn btn-primary btn-sm" %>
             </p>
         </div>
     </div>

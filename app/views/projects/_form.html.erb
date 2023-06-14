@@ -8,6 +8,9 @@
         <%= form.label :name ,class:"form-label" %><br>
         <%= form.text_field :name ,class:"form-control",required: true %>
       </div>
+      <% project.errors.full_messages_for(:name).each do |message| %>
+          <div class="text-danger"><%= message %></div>
+      <% end %>
 
       <div class="my-3 form-group">
         <%= form.label :description ,class:"form-label"  %><br>
