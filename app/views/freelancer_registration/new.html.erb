@@ -18,7 +18,7 @@
         <div class="card shadow">
           <div class="card-body">
 
-            <%= form_with model:@account,class:"row",url:freelancer_registration_path do |form| %>
+            <%= form_with model:@freelancer,class:"row",url:freelancer_registration_path do |form| %>
               <div class="my-3 col-6 form-group">
                 <%= form.label :name ,class:"form-label" %><br>
                 <%= form.text_field :name ,class:"form-control" ,required:true%>

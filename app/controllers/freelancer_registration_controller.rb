@@ -1,6 +1,7 @@
 class FreelancerRegistrationController < ApplicationController
   def new
     @account = Account.new
+    @freelancer = Freelancer.new
     @gender = ['male','female','transgender','other']
   end
   def create
@@ -27,4 +28,5 @@ class FreelancerRegistrationController < ApplicationController
     params.require(:account).permit(:name, :email, :phone, :image, :password, :linkedin, :gender, :github ,:description, :experience)
   end
 end
+
 

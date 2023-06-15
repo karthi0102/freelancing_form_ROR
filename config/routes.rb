@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+
+  devise_for :accounts, controllers: {
+    sessions: 'accounts/sessions',
+    password: 'accounts/passwords',
+    registrations: "accounts/registrations",
+    confirmations: "accounts/confirmations"
+  }
+
   get 'bank/AccountDetails'
   get "client/registration" ,to:"client_registration#new"
   post "client/registration" ,to:"client_registration#create"

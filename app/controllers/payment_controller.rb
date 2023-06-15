@@ -19,7 +19,6 @@ class PaymentController < ApplicationController
         h["status"] ="completed"
         h["amount"]=@params["amount"].to_f
         h["paid_date"]=DateTime.now
-
       end
     end
     @payment.save

@@ -1,0 +1,106 @@
+<h2>Sign up</h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= render "accounts/shared/error_messages", resource: resource %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name, autofocus: true, autocomplete: "username" %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email,  autocomplete: "email" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :phone %><br />
+    <%= f.number_field :phone, autocomplete: "phone" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :gender %><br />
+    <%= f.select(:gender,["Select Gender",'male','female','others'],{:id=>"account_role"}) %>
+  </div>
+
+  <div class="field">
+    <%= f.label :image %><br />
+    <%= f.file_field :image  %>
+  </div>
+
+  <div class="field">
+    <%= f.label :linkedin %><br />
+    <%= f.url_field :linkedin %>
+  </div>
+
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </div>
+
+  <%= fields_for :role do |role| %>
+  <div class="field">
+    <%= role.label :role %><br />
+    <%= role.select(:role,["Select Role",'Client','Freelancer'],{}) %>
+  </div>
+  <% end %>
+
+
+
+  <div class="field">
+    <%= f.label :password %>
+    <% if @minimum_password_length %>
+    <em>(<%= @minimum_password_length %> characters minimum)</em>
+    <% end %><br />
+    <%= f.password_field :password, autocomplete: "new-password" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+  </div>
+
+
+  <div id="client_attributes">
+    <%=fields_for :client_attributes do |client| %>
+      <div class="my-2 form-group field">
+        <%= client.label :company %><br />
+        <%= client.text_field :company %>
+      </div>
+
+      <div class="my-2 form-group field">
+        <%= client.label :company_location %><br />
+        <%= client.text_field :company_location %>
+      </div>
+    <%end %>
+  </div>
+
+  <div id="freelancer_attributes">
+    <%=fields_for :freelancer_attributes do |freelancer| %>
+    <div class="my-2 form-group field">
+      <%= freelancer.label :github %><br />
+      <%= freelancer.url_field :github %>
+    </div>
+
+    <div class="my-2 form-group field">
+      <%= freelancer.label :experience %><br />
+      <%= freelancer.text_area :experience %>
+    </div>
+  <%end %>
+  </div>
+
+
+
+  <div class="actions">
+    <%= f.submit "Sign up" %>
+  </div>
+<% end %>
+
+<%= render "accounts/shared/links" %>
+
+
+<%= javascript_include_tag 'sign_up' %>
+
+
+<div class="container">
+
+</div>
