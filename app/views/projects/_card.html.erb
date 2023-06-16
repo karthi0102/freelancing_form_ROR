@@ -16,9 +16,11 @@
                         <%=project.description %>
                     </p>
                     <div>
+                        <% if author_display %>
                         <p>
                             Posted By - <%= image_tag(project.client.account.image,class:"img-fluid img-thumbnail rounded project_created_by_image" )%> <%= project.client.account.name %>
                         </p>
+                        <%end%>
                     </div>
                     <%= link_to "View Project",project_path(project),class:"btn btn-primary text-light btn-sm" %>
                 </div>

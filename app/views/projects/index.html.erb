@@ -17,7 +17,7 @@
 
         <div class="row">
             <% @projects.each do |project| %>
-                <%= render "card" ,project: project %>
+                <%= render "card" ,project: project,author_display: true %>
             <% end %>
         </div>
     </div>

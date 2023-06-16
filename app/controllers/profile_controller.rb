@@ -1,18 +1,16 @@
 class ProfileController < ApplicationController
-  def show
-    @account = Account.find(params[:id])
-    @skills=[]
-    if @account.account_type=="freelancer"
-      @skills=@account.skills
-    end
-  end
-
-
   def client
-    @client = Client.find(params[:id])
-
+    @client = Client.find_by(id: params[:id])
+    i=0;
+    @rating=0;
+    @client.account.recipient_feedbacks.each do |feedback|
+      i+=1
+      @rating=@rating+feedback.rating
+    end
+    @rating=@rating/i
   end
+
   def freelancer
-    @freelancer = Freelancer.find(params[:id])
+    @freelancer = Freelancer.find_by(id: params[:id])
   end
 end

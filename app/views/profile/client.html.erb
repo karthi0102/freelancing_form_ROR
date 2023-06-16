@@ -1,7 +1,5 @@
 <%= render "header",user:@client%>
 
-
-
 <div class="container">
 
     <div class="card shadow my-3">
@@ -14,6 +12,29 @@
         </div>
     </div>
 
+    <h2 class="my-2">My Projects</h2>
+
+    <div class="row">
+        <% @client.projects.each do |project|%>
+            <%= render "projects/card" ,project: project ,author_display:false%>
+        <% end %>
+    </div>
+
+    <h2 class="my-2">Feedbacks</h2>
+
+    <div class="row">
+        <% @client.account.recipient_feedbacks.each do |feedback| %>
+            <div class="col-4 my-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <p><strong>Comment : </strong><%=feedback.comment%></p>
+                        <p><strong>Rating : </strong><%=feedback.rating%><i class="fa-solid fa-star" style="color:gold"></i></p>
+                        <p><strong>Commented By : </strong><%=feedback.created.name%></p>
+                    </div>
+                </div>
+            </div>
+        <% end %>
+    </div>
 
 </div>
 
