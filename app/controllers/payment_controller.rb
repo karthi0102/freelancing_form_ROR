@@ -22,8 +22,8 @@ class PaymentController < ApplicationController
       end
     end
     @payment.save
-    l= @account_details["values"].select {|h| h["status"]="completed"}.length
-    if @account_details["values"].length == 1
+    len= @account_details["values"].select {|h| h["status"]="completed"}.length
+    if @account_details["values"].length == len
       @payment.status="completed"
       @payment.save
     end

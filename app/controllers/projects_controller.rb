@@ -1,24 +1,32 @@
 class ProjectsController < ApplicationController
+  before_action :is_client, only: [:new,:create,:edit,:update,:destroy,:set_available]
+  before_action :is_freelancer ,only: [:index]
+  before_action :is_project_client,only: [:edit,:update,:destroy,:set_available]
+
+
   def index
-    @projects = Project.all
+    @projects = Project.available_project
   end
 
   def show
-    @project = Project.find(params[:id])
-    @freelancer = Freelancer.first
+    @project = Project.find_by(id:params[:id])
+    @freelancer = current_account.accountable if current_account.freelancer?
+
   end
 
   def new
-    @project = Project.new
+      @project = Project.new
   end
 
   def create
-    @client = Client.first
-    @project_details = project_params
-    @project_details["available"]=true
-    @project = @client.projects.create(@project_details)
-    if @client.save and @project.save
-      redirect_to @project
+    client = current_account.accountable if current_account.client?
+    project_data=project_params
+    image=project_data["image"]
+    project_data.delete("image")
+    project = client.projects.create(project_data)
+    project.image.attach(image)
+    if client.save and project.save
+      redirect_to project ,notice: "Created New Project"
     else
       render :new ,status: :unprocessable_entity
     end
@@ -53,105 +61,9 @@ class ProjectsController < ApplicationController
     @account = Account.find(params[:id])
   end
 
-  def add_freelancer_applicant
-      @project = Project.find(params[:id])
-      if @project
-        @freelancer = Freelancer.first
-        @applicant =  @freelancer.applicants.create(status:"applied")
-        @project.applicants<<@applicant
-        @applicant.save
-        @project.save
-        @freelancer.save
-        redirect_to project_path(@project)
-      else
-        redirect_to project_path(@project)
-      end
-  end
-
-  def add_team_applicant
-    @project = Project.find(params[:project_id]);
-    if @project
-      @team = Team.find(params[:team_id])
-      @applicant=@team.applicants.create(status:"applied")
-      @project.applicants<<@applicant
-      @applicant.save
-      @project.save
-      @team.save
-      redirect_to project_path(@project)
-    else
-      redirect_to project_path(@project)
-    endy]
-  end
-
-  def accept
-      @project = Project.find(params[:project_id])
-      @applicant = @project.applicants.find(params[:applicant_id])
-      applicant_type = @applicant.applicable_type
-      @project= @applicant.project
-      @applicant.status="accepted"
-
-      if @project.project_status==nil
-        @payment = Payment.new(amount:@project.amount,status:"pending")
-        @payment.save
-        @project_status = ProjectStatus.new(start_date:DateTime.now,status: "on-process",payment:@payment,project:@project)
-        @payment.project_status=@project_status
-        @project.project_status=@project_status
-        @project_status.save
-        @payment.save
-        @project.save
-
-      end
-
-      if applicant_type=="Freelancer"
-        @freelancer = Freelancer.find(@applicant.applicable_id)
-        @project_member =@freelancer.project_members.create();
-        @project_member.status="on-process"
-        @project.project_members<<@project_member
-        @project_member.save
-        @freelancer.save
-        @project.save
-
-      elsif applicant_type=="Team"
-        @team = Team.find(@applicant.applicable_id)
-        @project_member =@team.project_members.create();
-        @project.project_members<<@project_member
-        @project_member.status="on-process"
-        @project_member.save
-        @team.save
-        @project.save
-      end
-
-      @applicant.save
-      @project.save
-
-      redirect_to project_path(@project)
-  end
 
 
 
-  def reject
-    @applicant = Applicant.find(params[:applicant_id])
-    @project = @applicant.project
-    @applicant.status="rejected"
-    @applicant.save
-    redirect_to project_path(@applicant.project)
-  end
-
-
-  def member_completed
-    @project = Project.find(params[:project_id])
-    if @project
-      @project_member = @project.project_members.find(params[:member_id])
-      if @project_member
-
-         @project_member.save
-         @project_status = @project.project_status
-
-         @project.save
-        redirect_to new_feedback_path(to:@project.client.id,to_type:"Client",from:Freelancer.first.id,from_type:"Freelancer")
-      end
-    end
-  end
 
   def set_available
     @project = Project.find(params[:id])
@@ -160,13 +72,48 @@ class ProjectsController < ApplicationController
     redirect_to project_path(@project)
   end
 
+
   private
 
   def project_params
-    params.require(:project).permit(:name, :description, :amount)
+    params.require(:project).permit(:name, :description, :amount ,:image)
+  end
+
+  def is_client
+
+    unless account_signed_in? and current_account.client?
+      puts "flash"
+      flash[:error] = "Unauthorized action"
+      p flash[:error]
+      if account_signed_in?
+        redirect_to projects_path
+      else
+        redirect_to new_account_session_path
+      end
+    end
+  end
+
+  def is_freelancer
+    unless account_signed_in? and current_account.freelancer?
+    
+      flash[:error] = "Unauthorized action"
+      if account_signed_in?
+        redirect_to root_path
+      else
+        flash[:error] = "Unauthorized action"
+        redirect_to new_account_session_path
+      end
+    end
   end
 
 
+  def is_project_client
 
+    project_id=params[:id]
+    project = Project.find_by(id:project_id)
+    if current_account.accountable.id !=project.client.id
+      redirect_to root_path ,error: "Unauthorised Action"
+    end
+  end
 
 end

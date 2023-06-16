@@ -1,27 +1,44 @@
+<% mark_as_completed  =  member.memberable == current_account.accountable %>
+
+<% pay = @project.client == current_account.accountable %>
+
+<% payment = @project.payment if @project.payment %>
+<% paid_status="pending" %>
+<% if payment%>
+    <% payment.account_details["values"].each do |h| %>
+    <%  h["id"] == member.id %>
+       <%paid_status = h["status"] %>
+    <% end %>
+<% end %>
+
 <div class="col-3">
     <div class="card">
         <div class="card-body">
+
             <% if member.memberable_type=="Freelancer" %>
             <p class="m-1"><strong>Name : </strong><%= member.memberable.account.name %></p>
             <p class="m-1 "><strong>Status : </strong><%=member.status%></p>
             <%=link_to "View Profile",freelancer_profile_path(member.memberable),class:"btn btn-sm btn-info"%>
-            <% if !member.feedback and member.status=="completed"%>
+            <% if !member.feedback and member.status=="completed" and current_account.client?%>
             <%= link_to "Provide feedback",new_feedback_path(to:member.memberable.account,from:@project.client.account,member_id:member),class:"btn btn-sm btn-primary" %>
             <% end %>
+
         <% elsif member.memberable_type =="Team" %>
             <p class="m-1"><strong>Team Name : </strong><%= member.memberable.name %></p>
             <p class="m-1 "><strong>Status : </strong><%=member.status%></p>
             <%= link_to "View Team" ,team_path(member.memberable),class:"btn btn-sm btn-info" %>
-            <% if !member.feedback and member.status=="completed" %>
+            <% if !member.feedback and member.status=="completed" and current_account.client? %>
             <%= link_to "Provide feedback",new_team_feedback_path(to:member.memberable,from:@project.client.account,member_id:member),class:" btn btn-sm  btn-primary" %>
             <% end %>
         <% end%>
-            <p>
-                <%= button_to "Mark as Completed" ,account_details_path(project_id: @project,member_id: member),method: :get,class:"btn btn-sm btn-success" %>
-            </p>
-            <p>
-                <%=link_to "Pay" ,payment_new_path(project_id:@project,member_id: member) ,class:"btn btn-primary btn-sm" %>
-            </p>
+
+
+            <% if mark_as_completed and current_account.freelancer? and member.status!="completed"%>
+                 <%= button_to "Mark as Completed" ,account_details_path(project_id: @project,member_id: member),method: :get,class:"my-2 btn btn-sm btn-success" %>
+            <% end %>
+            <% if pay and member.status=="completed" and paid_status!="completed" %>
+                <%=link_to "Pay" ,payment_new_path(project_id:@project,member_id: member) ,class:" my-2 btn btn-primary btn-sm" %>
+            <% end %>
         </div>
     </div>
 </div>

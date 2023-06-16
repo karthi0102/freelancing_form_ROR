@@ -5,6 +5,7 @@
     }
 </style>
 
+<% unless @team.admin==freelancer %>
 <div class="col-3">
     <div class="card">
         <div class="card-body">
@@ -20,13 +21,14 @@
                     <div>
                         <%=link_to "View Profile" ,client_profile_path(freelancer),class:"btn btn-sm btn-info"%>
                     </div>
+                    <% if @team.admin == current_account.accountable %>
                     <div>
-                        <%= button_to "Remove #{freelancer.account.name}" ,remove_freelancer_path(freelancer_id: freelancer ,team_id: @team) ,method: :post,class:"btn btn-sm btn-danger" %>
+                        <%= button_to "Remove #{freelancer.account.name}" ,remove_freelancer_path(freelancer_id: freelancer ,id: @team) ,method: :post,class:"btn btn-sm btn-danger" %>
                     </div>
+                    <% end %>
                 </div>
-
-
-
         </div>
     </div>
 </div>
+
+<% end %>

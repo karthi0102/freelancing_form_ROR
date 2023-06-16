@@ -1,5 +1,5 @@
 
-<% stylesheet_link_tag "layout_index" %>
+
 
 <div class="landing_page_container">
        <div class="logo-container">
@@ -39,3 +39,5 @@
 
        </div>
 </div>
+
+<%=button_to "Logout",destroy_account_session_path,method: :delete%>

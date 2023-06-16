@@ -36,7 +36,7 @@
                 </p>
 
                 <hr class="bg-light text-light">
-
+                <% if current_account.accountable == @team.admin %>
                 <div class="d-flex align-items-center gap-2">
                     <div>
                         <%=link_to "Edit",edit_team_path(@team),class:"btn btn-sm btn-light"%>
@@ -52,8 +52,10 @@
 
                 <hr>
 
-                <%=button_to "Join Team",join_team_path(team_id:@team),method: :post,class:"btn btn-sm btn-light"%>
-
+        <%end%>
+                <%if  @team.freelancers.where(id: current_account.accountable.id).length ==0 %>
+                    <%=button_to "Join Team",join_team_path(team_id:@team),method: :post,class:"btn btn-sm btn-light"%>
+                <%end%>
             </div>
         </div>
     </div>

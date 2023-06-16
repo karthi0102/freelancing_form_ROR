@@ -25,6 +25,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     resource.name = params[:account][:name]
     resource.phone = params[:account][:phone]
     resource.gender = params[:account][:gender]
+
     resource.accountable_type=params[:role][:role].camelcase
     resource.linkedin=params[:account][:linkedin]
     resource.accountable_id = accountable.id
@@ -91,9 +92,13 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   # end
 
   # The path used after sign up.
-  # def after_sign_up_path_for(resource)
-  #   super(resource)
-  # end
+  def after_sign_up_path_for(resource)
+    if resource.client?
+      root_path
+    elsif resource.freelancer?
+      projects_path
+    end
+  end
 
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)

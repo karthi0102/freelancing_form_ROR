@@ -16,65 +16,76 @@
 <div class="container">
 
 
-
+<% if current_account.freelancer? %>
     <div class="card shadow my-4">
-
-
-
             <div class="card-body">
-
                 <% if @project.applicants.where(applicable_id:Freelancer.first.id,applicable_type:"Freelancer").length==0 %>
-
                 <div>
                     <h4>Apply as an Individual for this project</h4>
                     <%= button_to "Apply Project as Freelancer",apply_project_freelancer_path(@project) ,method: :post ,class:"btn btn-primary btn-sm" %>
                 </div>
+                <% else %>
+                 <%=button_to "Applied as an Individual",nil,class:"btn btn-primary"%>
                 <hr>
                 <% end %>
-
-
+                <% if @freelancer.teams.length !=0 %>
                 <div>
                     <h4>Apply as a Team</h4>
                     <% @freelancer.teams.each do |team| %>
-                        <%= render "teams",team: team %>
+                        <%if @project.project_members.where(memberable_id: team.id).length==0%>
+                            <%= render "teams",team: team %>
+                        <% end %>
                     <% end%>
                 </div>
-
+                <% else%>
+                <div>
+                    <p>Join in a Team to Apply as an Team</p>
+                    <%= link_to "View Teams",teams_path,class:"btn btn-sm btn-info" %>
+                </div>
+                <% end %>
             </div>
-
-
-
     </div>
 
+<% end %>
 
 
-    <div class="card shadow my-3">
-        <div class="card-body">
-            <h3>Applications</h3>
-            <div class="row">
+<% if current_account.client? and @project.applicants.length!=0 %>
+    <% applied= @project.applicants_with_status("applied") %>
+    <% rejected= @project.applicants_with_status("rejected") %>
+
+    <% if applied.length !=0 %>
+        <div class="card shadow my-3">
+            <div class="card-body">
+                <h3>Applications</h3>
+                <div class="row">
 
 
-            <% @project.applicants.where(status:"applied").each do |applicant| %>
-                    <%= render "appliers",applicant:applicant,d:true,project:@project %>
-            <% end %>
+                <% @project.applicants_with_status("applied").each do |applicant| %>
+                        <%= render "appliers",applicant:applicant,d:true,project:@project %>
+                <% end %>
 
+                </div>
             </div>
         </div>
-    </div>
+    <%end%>
+    <% if rejected.length!=0 %>
 
     <div class="card shadow my-3">
         <div class="card-body">
             <h3>Rejected Applications</h3>
             <div class="row">
-            <% @project.applicants.where(status:"rejected").each do |applicant| %>
-                    <%= render "appliers",applicant:applicant,d:false %>
-            <% end %>
+                <% @project.applicants_with_status("rejected").each do |applicant| %>
+                <%= render "appliers",applicant:applicant,d:false %>
+                <% end %>
             </div>
         </div>
     </div>
 
+    <% end %>
 
+    <% end %>
 
+    <% if @project.project_members.length !=0 %>
     <div class="card shadow my-3">
         <div class="card-body">
             <h3>Project Members</h3>
@@ -86,6 +97,8 @@
             </div>
         </div>
     </div>
+
+    <% end %>
 
 
 </div>

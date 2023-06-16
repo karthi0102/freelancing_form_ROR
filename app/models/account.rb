@@ -15,6 +15,22 @@ class Account < ApplicationRecord
     created_feedbacks
   end
 
+  def client?
+    if accountable_type=="Client"
+      return true
+    else
+      return false
+    end
+  end
+
+  def freelancer?
+    if accountable_type=="Freelancer"
+      return true
+    else
+      return false
+    end
+  end
+
   validates :name, length: { in: 5..30 }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP ,message:"Invalid Email" }
   validates :phone ,length: { is:10 ,message:"Invalid Phone Number"}
