@@ -1,4 +1,7 @@
 class ApplicantController < ApplicationController
+  before_action :is_freelancer , except: [:reject]
+  before_action :is_client ,only: [:reject]
+
   def add_freelancer_applicant
     project = Project.find(params[:id])
     if project
@@ -48,5 +51,33 @@ def reject
     redirect_to root_path ,error:"unkown action"
   end
 end
+
+private
+  def is_client
+
+    unless account_signed_in? and current_account.client?
+      puts "flash"
+      flash[:error] = "Unauthorized action"
+      p flash[:error]
+      if account_signed_in?
+        redirect_to projects_path
+      else
+        redirect_to new_account_session_path
+      end
+    end
+  end
+
+  def is_freelancer
+    unless account_signed_in? and current_account.freelancer?
+
+      flash[:error] = "Unauthorized action"
+      if account_signed_in?
+        redirect_to root_path
+      else
+        flash[:error] = "Unauthorized action"
+        redirect_to new_account_session_path
+      end
+    end
+  end
 
 end

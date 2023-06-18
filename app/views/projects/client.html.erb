@@ -1,0 +1,12 @@
+
+<div class="container">
+    <h2 class="my-3">My Projects </h2>
+    <div class="row my-3">
+        <%@client.projects.each do |project|%>
+            <%= render "card",project:project,author_display:false%>
+        <%end%>
+    </div>
+</div>
+
+
+

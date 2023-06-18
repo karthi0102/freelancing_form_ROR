@@ -57,8 +57,8 @@ class ProjectsController < ApplicationController
   end
 
 
-  def mine
-    @account = Account.find(params[:id])
+  def client
+    @client = current_account.accountable
   end
 
 

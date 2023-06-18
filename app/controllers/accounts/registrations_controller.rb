@@ -14,7 +14,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
     accountable = if params[:role][:role]=="Client"
         Client.new(client_params)
     elsif params[:role][:role]=="Freelancer"
-      Freelancer.new(freelancer_params)
+       Freelancer.new(freelancer_params)
     end
 
     accountable.save

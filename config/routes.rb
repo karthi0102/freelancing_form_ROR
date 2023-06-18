@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   get "profile/client/:id", to:"profile#client", as:'client_profile'
   get "profile/freelancer/:id", to:"profile#freelancer" ,as:"freelancer_profile"
-  get 'account/project/:id', to:"projects#mine", as:'my_projects'
+  get 'projects/my', to:"projects#client", as:'my_projects'
 
   post 'project/apply/:id' ,to:"applicant#add_freelancer_applicant",as: 'apply_project_freelancer'
   post 'project/apply/:project_id/:team_id', to:"applicant#add_team_applicant", as: "apply_project_team"
