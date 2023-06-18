@@ -1,9 +1,6 @@
 class ProjectMemberController < ApplicationController
-
   before_action :is_client ,only: [:accept]
   before_action :is_project_client ,only: [:accept]
-
-
   def accept
     project = Project.find_by(id:params[:project_id])
     if project

@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   post 'login', to:'login#create'
 
   post 'new_freelancer_skill', to:'skills#create'
+  delete 'skills/:id' , to:"skills#destroy", as:"delete_skill"
+
   post 'team/join/:team_id' , to:"teams#join" ,as:"join_team"
 
   post "project/accept/:project_id/:applicant_id:",to:'project_member#accept', as:'accept_applicant'
@@ -38,7 +40,8 @@ Rails.application.routes.draw do
 
   get "feedback/new/:to/:from/:member_id", to:"feedback#team",as:"new_team_feedback"
   post "feedback/team/new",to:"feedback#team_create"
-  # get "payment/new/:id" , to:"payment#new", as:"payment_new"
+
+
   post "payment/new" , to:"payment#create" ,as:"payment"
   patch "project/set_available/:id", to:"projects#set_available",as:"set_available_status"
 

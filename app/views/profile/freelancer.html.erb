@@ -1,44 +1,87 @@
+<style>
+    .skill-options{
+        position:relative;
+        right: 10px;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        gap:12px;
+    }
+</style>
 
-<h1>Freelancer Profile</h1>
+<%=render "header",user:@freelancer%>
 
-<p><%=@freelancer.account.name %></p>
-<p><%=@freelancer.account.email %></p>
-<p><%=@freelancer.account.phone %></p>
-<p><%=@freelancer.account.gender %></p>
+<div class="container">
 
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow my-3">
+                <div class="card-body">
+                    <p><strong>Experience : </strong></p>
+                    <p><%= @freelancer.experience %></p>
+                    <div class="d-flex gap-3">
+                        <div>
+                            <a href=<%=@freelancer.account.linkedin%> target="_blank"><i class="fa-brands fa-linkedin fa-2xl" style="color: #0077b5;"></i></a>
+                        </div>
+                        <div>
+                            <a href=<%=@freelancer.github%> target="_blank"><i class="fa-brands fa-github fa-2xl" style="color: #1f3050;"></i></a>
+                        </div>
+                    </div>
+                </div>
 
-<div>
-    <%= image_tag(@freelancer.account.image ,:alt =>"not found") %>
-</div>
-
-
-<h1>My Teams</h1>
-
-
-<div>
-    <% @freelancer.teams.each do |team| %>
-        <div>
-            <p><%=team.name%></p>
-            <%= link_to "View Team",team_path(team) %>
-            <hr>
-        </div>
-    <% end %>
-</div>
-
-
-<h1>Add Skills</h1>
-
-<p>My Skills</p>
-
-<div>
-        <% @freelancer.skills.each do |skill|%>
-            <div>
-                <%= skill.name %> - <%=skill.level%>
             </div>
+        </div>
+    </div>
+
+    <h2 class="my-3">Teams</h2>
+    <div class="row">
+        <%@freelancer.teams.each do |team|%>
+            <%=render "teams/card",team:team%>
+        <%end%>
+    </div>
+    <h2 class="my-5">Previous Project Experience</h2>
+    <div class="row">
+        <%@freelancer.projects.each do |project|%>
+            <%=render "projects/card",project:project, author_display: true%>
         <% end %>
+    </div>
+    <h2 class="my-3">Feedbacks</h2>
+    <div class="row">
+        <%@freelancer.account.recipient_feedbacks.each do |feedback|%>
+            <%=render "feedback",feedback:feedback %>
+        <%end%>
+    </div>
+
+
+
+    <h2 class="my-3">Skills</h2>
+    <div class="row">
+        <div class="card shadow">
+            <div class="card-body">
+                <% @freelancer.skills.each do |skill|%>
+                    <% bg="" %>
+                    <% if skill.level=="Beginner" %>
+                    <% bg="bg-info" %>
+                    <% elsif skill.level=="Intermediate" %>
+                    <% bg="bg-warning" %>
+                    <% else %>
+                    <% bg="bg-success" %>
+                    <% end %>
+                    <%= render "skills/skills",skill:skill,bg:bg %>
+                <% end %>
+            </div>
+        </div>
+    </div>
+
+     <% if current_account.accountable == @freelancer %>
+    <div class="my-3">
+        <h2>Add Skills</h2>
+        <%= render "skills/form" %>
+    </div>
+    <%end%>
+
+
 </div>
 
-<hr>
 
 
-<%= render "skills/form" %>

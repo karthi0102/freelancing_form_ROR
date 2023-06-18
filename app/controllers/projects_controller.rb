@@ -41,17 +41,17 @@ class ProjectsController < ApplicationController
 
   def update
 
-    @project = Project.find(params[:id])
+    project = Project.find(params[:id])
 
-    if @project.update(project_params)
-      redirect_to @project
+    if project.update(project_params)
+      redirect_to project
     else
       render :edit, status: :unprocessable_entity
     end
   end
   def destroy
-    @project = Project.find(params[:id])
-    @project.destroy
+    project = Project.find(params[:id])
+    project.destroy
 
     redirect_to projects_path, status: :see_other
   end
@@ -95,7 +95,7 @@ class ProjectsController < ApplicationController
 
   def is_freelancer
     unless account_signed_in? and current_account.freelancer?
-    
+
       flash[:error] = "Unauthorized action"
       if account_signed_in?
         redirect_to root_path
