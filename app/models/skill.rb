@@ -5,7 +5,7 @@ class Skill < ApplicationRecord
     def randomize_id
         self.id = SecureRandom.random_number(1_000_000_000)
     end
- validates :name,:skill ,presence:true
+ validates :name,:level ,presence:true
 end
 
 

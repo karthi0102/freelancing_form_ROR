@@ -5,9 +5,9 @@ class SkillsController < ApplicationController
     def create
       freelancer = current_account.accountable if current_account.freelancer?
       if freelancer
-        @skill = freelancer.skills.create(skill_params)
+        skill = freelancer.skills.create(skill_params)
+        skill.save
         freelancer.save
-        @skill.save
         redirect_to freelancer_profile_path(freelancer)
       end
     end

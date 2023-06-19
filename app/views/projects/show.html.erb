@@ -15,7 +15,7 @@
 <% if current_account.freelancer? %>
     <div class="card shadow my-4">
             <div class="card-body">
-                <% if @project.applicants.where(applicable_id:Freelancer.first.id,applicable_type:"Freelancer").length==0 %>
+                <% if @project.applicants.where(applicable_id:current_account.accountable.id,applicable_type:"Freelancer").length==0 %>
                 <div>
                     <h4>Apply as an Individual for this project</h4>
                     <%= button_to "Apply Project as Freelancer",apply_project_freelancer_path(@project) ,method: :post ,class:"btn btn-primary btn-sm" %>
@@ -26,10 +26,12 @@
                 <% end %>
                 <% if @freelancer.teams.length !=0 %>
                 <div>
-                    <h4>Apply as a Team</h4>
+                    <h4 class="my-3">Apply as a Team</h4>
                     <% @freelancer.teams.each do |team| %>
-                        <%if @project.project_members.where(memberable_id: team.id).length==0%>
+                        <%if @project.applicants.where(applicable_id: team.id).length==0%>
                             <%= render "teams",team: team %>
+                        <%else %>
+                            <p>Applied via team <%=team.name%></p>
                         <% end %>
                     <% end%>
                 </div>

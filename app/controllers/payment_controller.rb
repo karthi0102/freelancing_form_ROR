@@ -29,7 +29,7 @@ class PaymentController < ApplicationController
       payment.status="completed"
       payment.save
     end
-    redirect_to root_path
+    redirect_to my_projects_path
   end
   private
   def payment_params

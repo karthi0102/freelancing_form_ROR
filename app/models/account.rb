@@ -6,9 +6,9 @@ class Account < ApplicationRecord
          :recoverable, :rememberable, :validatable
   belongs_to :accountable ,polymorphic: true
   has_one_attached :image ,dependent: :destroy
-  has_many :created_feedbacks, class_name: 'Feedback', foreign_key: 'created_id'
+  has_many :created_feedbacks, class_name: 'Feedback', foreign_key: 'created_id',dependent: :destroy
 
-  has_many :received_feedbacks, class_name: 'Feedback', foreign_key: 'recipient_id'
+  has_many :received_feedbacks, class_name: 'Feedback', foreign_key: 'recipient_id' ,dependent: :destroy
 
   scope :rating_grater_than_3, -> { where('accounts.id IN (?)', Account.pluck(:id).select { |id| Account.find(id).ratings >= 3 }) }
   scope :rating_less_than_3, -> { where('accounts.id IN (?)', Account.pluck(:id).select { |id| Account.find(id).ratings < 3 }) }

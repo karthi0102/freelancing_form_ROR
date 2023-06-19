@@ -5,25 +5,25 @@
         <div class="card-body">
             <h1 class="text-center">Provide a Feedback</h1>
             <%= form_with model:@feedback ,url:feedback_team_new_path do |form|  %>
-            <p>
-              <%=form.hidden_field 'to', value:@to %>
+                <p>
+                  <%=form.hidden_field 'to', value:@to %>
 
-              <%=form.hidden_field 'from',value:@from%>
-              <%=form.hidden_field 'member_id',value:@member_id.to_i%>
+                  <%=form.hidden_field 'from',value:@from%>
+                  <%=form.hidden_field 'member_id',value:@member_id%>
 
-            </p>
-          <div class="my-3 form-group">
-              <%= form.label :comment ,class:"form-label"%>
-              <%= form.text_area :comment%>
-          </div>
-          <div class="my-3 form-group"  >
-            <%= form.label :rating ,class:"form-label"%>
-            <%= form.select(:rating, [1,2,3,4,5], {selected:3},{:class=>"form-select",:required=>true}) %>
-          </div>
+                </p>
+              <div class="my-3 form-group">
+                  <%= form.label :comment ,class:"form-label"%>
+                  <%= form.text_area :comment,class:"form-control"%>
+              </div>
+              <div class="my-3 form-group"  >
+                <%= form.label :rating ,class:"form-label"%>
+                <%= form.select(:rating, [1,2,3,4,5], {selected:3},{:class=>"form-select",:required=>true}) %>
+              </div>
 
-          <div class="my-3 form-group">
-              <%= form.submit "Create Feedback" ,class:"btn btn-success" %>
-          </div>
+              <div class="my-3 form-group">
+                  <%= form.submit "Create Feedback" ,class:"btn btn-success" %>
+              </div>
           <% end %>
         </div>
       </div>

@@ -71,6 +71,14 @@ class Api::ProjectsController < Api::ApiController
 
   end
 
+  def available_projects
+    projects = Project.where(available:true)
+    if projects.empty?
+      render json: {message:"No projects found"},status: :ok
+    else
+      render json: projects ,status: :ok
+    end
+  end
 
   def client
     @client = current_account.accountable
@@ -81,10 +89,15 @@ class Api::ProjectsController < Api::ApiController
 
 
   def set_available
-    @project = Project.find(params[:id])
-    @project.available=!@project.available
-    @project.save
-    redirect_to project_path(@project)
+    project = Project.find(params[:id])
+    if project
+      project.available=!project.available
+      project.save
+      render json: {message:"project status changed to #{project.available}"} ,status: :ok
+    else
+      render json: {message:"Cannot find a project"},status: :ok
+    end
+
   end
 
 

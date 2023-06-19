@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   get "login", to:'login#new'
   post 'login', to:'login#create'
 
-  post 'new_freelancer_skill', to:'skills#create'
+  post 'skills', to:'skills#create'
   delete 'skills/:id' , to:"skills#destroy", as:"delete_skill"
 
   post 'team/join/:team_id' , to:"teams#join" ,as:"join_team"
@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   get "feedback/new/:to/:from/:member_id", to:"feedback#new" ,as:"new_feedback"
   post "feedback/new" ,to:"feedback#create"
 
-  get "feedback/new/:to/:from/:member_id", to:"feedback#team",as:"new_team_feedback"
+  get "feedback/new/team/:to/:from/:member_id", to:"feedback#team",as:"new_team_feedback"
   post "feedback/team/new",to:"feedback#team_create"
 
 
@@ -77,7 +77,7 @@ Rails.application.routes.draw do
     get "profile/client/:id", to:"profile#client", as:'client_profile'
     get "profile/freelancer/:id", to:"profile#freelancer" ,as:"freelancer_profile"
     get 'projects/my', to:"projects#client", as:'my_projects'
-
+    get "projects/available",to:"projects#available_projects"
     post 'project/apply/:id' ,to:"applicant#add_freelancer_applicant",as: 'apply_project_freelancer'
     post 'project/apply/:project_id/:team_id', to:"applicant#add_team_applicant", as: "apply_project_team"
     post "project/reject/:applicant_id:",to:'applicant#reject', as:'reject_applicant'
