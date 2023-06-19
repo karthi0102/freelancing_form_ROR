@@ -1,6 +1,7 @@
 class TeamsController < ApplicationController
   before_action :is_freelancer, except: [:show]
   before_action :is_team_admin, only: [:edit,:update,:destroy,:remove]
+  before_action :authenticate_account!
   def index
     @teams = Team.all
   end
@@ -13,25 +14,27 @@ class TeamsController < ApplicationController
   end
 
   def create
-    freelancer = current_account.accountable if current_account.freelancer?
+    @freelancer = current_account.accountable if current_account.freelancer?
+    team_data = team_params
+    image= team_data["image"]
+    team_data.delete("image")
+    team_data["admin"]=@freelancer
+    @team = Team.new(team_data)
+    @team.image.attach(image)
+    puts "hii"
 
-    if freelancer
-        team_data = team_params
-        team = Team.new(name:team_data["name"],description:team_data["description"],admin:freelancer)
-        team.image.attach(team_data["image"])
 
-        if team.save
-          freelancer.teams<<team
-          if freelancer.save
-            redirect_to team_path(team)
-          else
-            render :new ,status: :unprocessable_entity ,error:"Unknowm Process"
-          end
-        else
-          render :new ,status: :unprocessable_entity ,error:"Unknowm Process"
-        end
+    if @team.save
+
+      @freelancer.teams<<@team
+      if @freelancer.save
+        redirect_to team_path(@team)
+      else
+        @team.destroy
+        render :new ,status: :unprocessable_entity
+      end
     else
-        render :new ,status: :unprocessable_entity ,error:"Unknowm Process"
+        render :new ,status: :unprocessable_entity
     end
 
   end
@@ -41,42 +44,42 @@ class TeamsController < ApplicationController
   end
 
   def update
-    @team = Team.find(params[:id])
-    if @team.update(team_params)
-        @team.save
-        redirect_to team_path(@team)
+    team = Team.find(params[:id])
+    if team.update(team_params)
+        team.save
+        redirect_to team_path(team)
     else
       render :new ,status: :unprocessable_entity
     end
   end
 
   def destroy
-    @team = Team.find(params[:id])
-    @team.destroy
+    team = Team.find(params[:id])
+    team.destroy
     redirect_to teams_path ,status: :see_other
   end
 
   def join
-    @freelancer = current_account.accountable if current_account.freelancer?
-    if @freelancer
-    @team = Team.find(params[:team_id])
+    freelancer = current_account.accountable if current_account.freelancer?
+    if freelancer
+    team = Team.find(params[:team_id])
 
-    if @freelancer and @team
-      @freelancer.teams<<@team
-      @freelancer.save
-      @team.save
-      redirect_to team_path(@team)
+    if freelancer and team
+      freelancer.teams<<team
+      freelancer.save
+      team.save
+      redirect_to team_path(team)
     end
   end
   end
 
   def remove
-    @freelancer = Freelancer.find(params[:freelancer_id])
-    @team=Team.find(params[:id])
-    @freelancer.teams.delete(@team)
-    @freelancer.save
-    @team.save
-    redirect_to teams_path(@team)
+    freelancer = Freelancer.find(params[:freelancer_id])
+    team=Team.find(params[:id])
+    freelancer.teams.delete(team)
+    freelancer.save
+    team.save
+    redirect_to teams_path(team)
   end
 
   private

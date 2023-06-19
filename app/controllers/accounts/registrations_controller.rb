@@ -5,10 +5,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  # def new
-  #   super
-  # end
-
+ 
   # POST /resource
   def create
     accountable = if params[:role][:role]=="Client"
@@ -108,13 +105,18 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   def client_params
     params.require(:client_attributes).permit(:company,:company_location)
   end
+
+
   def freelancer_params
     params.require(:freelancer_attributes).permit(:github,:experience)
   end
+
   def account_params
     params.require(:account).permit(:name,:gender,:phone,:image,:linkedin,:description)
   end
+
   def role_params
     params.require(:role).permit(:role)
   end
+
 end

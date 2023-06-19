@@ -1,6 +1,7 @@
 class ApplicantController < ApplicationController
   before_action :is_freelancer , except: [:reject]
   before_action :is_client ,only: [:reject]
+  before_action :authenticate_account!
 
   def add_freelancer_applicant
     project = Project.find(params[:id])

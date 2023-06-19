@@ -7,4 +7,10 @@ class ProjectMember < ApplicationRecord
     self.status="on-process"
     self.feedback=false
   end
+  before_create :randomize_id
+  private
+    def randomize_id
+        self.id = SecureRandom.random_number(1_000_000_000)
+    end
+
 end

@@ -12,17 +12,22 @@
 
             <p>
               <%=form.hidden_field 'to', value:@to.to_i %>
-
               <%=form.hidden_field 'from',value:@from.to_i%>
               <%=form.hidden_field 'member_id',value:@member_id.to_i%>
             </p>
           <div class="my-3 form-group">
               <%= form.label :comment ,class:"form-label"%><br>
               <%= form.text_area :comment,class:"form-control",required:true%>
+              <% @feedback.errors.full_messages_for(:comment).each do |message| %>
+                <div class="form-text text-danger"><%= message %></div>
+            <% end %>
           </div>
           <div class="my-3 form-group">
             <%= form.label :rating,class:"form-label" %><br>
             <%= form.select(:rating, [1,2,3,4,5], {selected:3},{:class=>"form-select",:required=>true})%>
+            <% @feedback.errors.full_messages_for(:rating).each do |message| %>
+                <div class="form-text text-danger"><%= message %></div>
+            <% end %>
           </div>
 
           <div class="my-3 form-group">

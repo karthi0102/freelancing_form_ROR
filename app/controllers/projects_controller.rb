@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
-  before_action :is_client, only: [:new,:create,:edit,:update,:destroy,:set_available]
+  before_action :is_client, only: [:new,:create,:edit,:update,:destroy,:set_available,:client]
   before_action :is_freelancer ,only: [:index]
   before_action :is_project_client,only: [:edit,:update,:destroy,:set_available]
+  before_action :authenticate_account!
 
 
   def index
@@ -19,14 +20,14 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    client = current_account.accountable if current_account.client?
+    @client = current_account.accountable if current_account.client?
     project_data=project_params
     image=project_data["image"]
     project_data.delete("image")
-    project = client.projects.create(project_data)
-    project.image.attach(image)
-    if client.save and project.save
-      redirect_to project ,notice: "Created New Project"
+    @project = client.projects.create(project_data)
+    @project.image.attach(image)
+    if @client.save and @project.save
+      redirect_to @project ,notice: "Created New Project"
     else
       render :new ,status: :unprocessable_entity
     end

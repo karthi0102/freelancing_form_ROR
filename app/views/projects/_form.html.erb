@@ -1,30 +1,35 @@
 
-
-
 <div class="card shadow my-3">
   <div class="card-body">
     <%= form_with model: project do |form| %>
       <div class="my-3 form-group">
         <%= form.label :name ,class:"form-label" %><br>
         <%= form.text_field :name ,class:"form-control",required: true %>
+        <% project.errors.full_messages_for(:name).each do |message| %>
+            <div class="form-text text-danger"><%= message %></div>
+        <% end %>
       </div>
-      <% project.errors.full_messages_for(:name).each do |message| %>
-          <div class="text-danger"><%= message %></div>
-      <% end %>
 
       <div class="my-3 form-group">
         <%= form.label :description ,class:"form-label"  %><br>
         <%= form.text_area :description ,class:"form-control",required: true  %><br>
+        <% project.errors.full_messages_for(:description).each do |message| %>
+            <div class="form-text text-danger"><%= message %></div>
+        <% end %>
       </div>
 
       <div class="my-3 form-group">
         <%=form.label :image ,class:"form-label" %> <br>
         <%= form.file_field :image ,class:"form-control",required: img  %>
+
       </div>
 
       <div class="my-3 form-group">
         <%= form.label :amount ,class:"form-label" %><br>
         <%= form.number_field :amount ,class:"form-control",required: true  %><br>
+        <% project.errors.full_messages_for(:amount).each do |message| %>
+            <div class="form-text text-danger"><%= message %></div>
+        <% end %>
       </div>
 
       <div class="my-3 form-group">

@@ -7,10 +7,16 @@ class Freelancer < ApplicationRecord
   has_many :project_members ,as: :memberable,dependent: :destroy
   has_many :applicants ,as: :applicable,dependent: :destroy
   has_many :projects, through: :project_members
-
+  scope :is_team_admin, ->{ joins(:teams).group(:id).having("COUNT(teams.id) >=1") }
   def team_admin
     team_admins
   end
+  before_create :randomize_id
+  private
+    def randomize_id
+        self.id = SecureRandom.random_number(1_000_000_000)
+    end
+
   validates :github ,presence: true
   validates :experience ,length: {minimum:20,maximum:1500,:too_short=>"is too short",:too_long=>"is too long"}
 end

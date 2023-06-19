@@ -1,6 +1,7 @@
 class Account < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   belongs_to :accountable ,polymorphic: true
@@ -8,11 +9,25 @@ class Account < ApplicationRecord
   has_many :created_feedbacks, class_name: 'Feedback', foreign_key: 'created_id'
 
   has_many :received_feedbacks, class_name: 'Feedback', foreign_key: 'recipient_id'
+
+  scope :rating_grater_than_3, -> { where('accounts.id IN (?)', Account.pluck(:id).select { |id| Account.find(id).ratings >= 3 }) }
+  scope :rating_less_than_3, -> { where('accounts.id IN (?)', Account.pluck(:id).select { |id| Account.find(id).ratings < 3 }) }
+
   def recipient_feedbacks
     received_feedbacks
   end
   def creator_feedbacks
     created_feedbacks
+  end
+
+  def ratings
+    average_rating =received_feedbacks.average(:rating)
+    if average_rating
+     formatted_average_rating =  sprintf('%.2f', average_rating)
+     formatted_average_rating.to_f
+    else
+      0
+    end
   end
 
   def client?
@@ -31,10 +46,18 @@ class Account < ApplicationRecord
     end
   end
 
+  before_create :randomize_id
+  private
+    def randomize_id
+        self.id = SecureRandom.random_number(1_000_000_000)
+    end
+
+
   validates :name, length: { in: 5..30 }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP ,message:"Invalid Email" }
   validates :phone ,length: { is:10 ,message:"Invalid Phone Number"}
   validates :gender, inclusion: { in: %w(male female trasgender others),message: "%{value} is not a valid gender" }
   validates :password, length: {minimum:6,message:"length must be a minimum of 6"}
   validates :description, length: {minimum:20,maximum:1500,:too_short=>"is too short",:too_long=>"is too long"}
+
 end

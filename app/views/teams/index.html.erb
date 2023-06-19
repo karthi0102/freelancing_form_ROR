@@ -3,7 +3,16 @@
         height: 48px;
         width: 48px;
     }
+    .floating_button{
+        position:absolute;
+        bottom:20px;
+        right:20px;
+        width: fit-content;
+        border-radius: 50%;
+
+    }
 </style>
+
 
 
 <div class="container">
@@ -17,3 +26,9 @@
 
 </div>
 
+
+<div class="floating_button">
+    <%= link_to new_team_path,class:"btn btn-success p-4 shadow  floating_button" do%>
+            <i class="fa-sharp fa-solid fa-plus fa-xl" style="color:white"></i>
+    <%end %>
+</div>

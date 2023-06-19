@@ -66,8 +66,6 @@
           <h2 class="text-center my-3">Join With us</h2>
           <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
                 <%= render "accounts/shared/error_messages", resource: resource %>
-
-
                 <div class="card">
                   <div class="card-body">
                       <h3>Personal Details</h3>
@@ -83,7 +81,7 @@
 
                       <div class="my-3 form-group field">
                         <%= f.label :phone ,class:"form-label" %>
-                        <%= f.number_field :phone, autocomplete: "phone",class:"form-control",required:true %>
+                        <%= f.telephone_field :phone, autocomplete: "phone",class:"form-control",required:true %>
                       </div>
 
                       <div class="my-3 form-group  field">
@@ -99,12 +97,14 @@
                       <div class="my-3 form-groupfield">
                         <%= f.label :linkedin,class:"form-label" %>
                         <%= f.url_field :linkedin,class:"form-control" %>
+
                       </div>
 
                       <div class="my-3 form-group field">
                         <%= f.label :description,class:"form-label" %>
                         <%= f.text_area :description,class:"form-control" %>
                       </div>
+
                   </div>
                 </div>
 
@@ -171,6 +171,7 @@
                     <div class="my-2 form-group field">
                       <%= freelancer.label :github ,class:"form-label"%>
                       <%= freelancer.url_field :github,class:"form-control" %>
+
                     </div>
 
                     <div class="my-2 form-group field">

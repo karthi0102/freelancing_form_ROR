@@ -1,5 +1,6 @@
 class FeedbackController < ApplicationController
-  before_action :is_freelancer
+
+  before_action :authenticate_account!
   def new
     @feedback=Feedback.new
     @to=params[:to].to_i
@@ -31,9 +32,8 @@ class FeedbackController < ApplicationController
     recipient = Account.find_by(id: feedback_data["to"])
     created = Account.find_by(id: feedback_data["from"])
     project_member = ProjectMember.find_by(id: feedback_data["member_id"])
-    feedback = Feedback.new(comment: feedback_data["comment"], rating:feedback_data["rating"],created:created,recipient:recipient)
-    if feedback.save
-
+    @feedback = Feedback.new(comment: feedback_data["comment"], rating:feedback_data["rating"],created:created,recipient:recipient)
+    if @feedback.save
       if created.freelancer?
         redirect_to freelancer_profile_path(created.accountable)
       else

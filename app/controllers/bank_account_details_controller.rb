@@ -1,5 +1,6 @@
 class BankAccountDetailsController < ApplicationController
   before_action :is_freelancer ,only: [:new,:create]
+  before_action :authenticate_account!
   def new
     @project_id = params[:project_id].to_i
     @member_id = params[:member_id].to_i
@@ -37,6 +38,7 @@ class BankAccountDetailsController < ApplicationController
   def bank_account_details_params
       params.permit(:project_id, :member_id, :account_number,:ifsc_code)
   end
+  
   def is_freelancer
     unless account_signed_in? and current_account.freelancer?
       p "flash recorded"

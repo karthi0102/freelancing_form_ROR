@@ -1,5 +1,6 @@
 class PaymentController < ApplicationController
   before_action :is_client
+  before_action :authenticate_account!
   def new
     @project = Project.find(params[:project_id].to_i)
     @member = @project.project_members.find(params[:member_id].to_i)

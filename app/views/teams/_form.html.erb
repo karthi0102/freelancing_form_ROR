@@ -6,16 +6,22 @@
         <%= form_with model: team do |form| %>
           <div class="my-3 form-group">
             <%= form.label :name, class:"form-label" %>
-            <%= form.text_field :name, class:"form-control",required:true %>
+            <%= form.text_field :name, class:"form-control" %>
+            <% team.errors.full_messages_for(:name).each do |message| %>
+                <div class="form-text text-danger"><%= message %></div>
+            <% end %>
           </div>
 
           <div class="my-3 form-group">
             <%= form.label :description,class:"form-label" %><br>
-            <%= form.text_area :description,class:"form-control",required:true %>
+            <%= form.text_area :description,class:"form-control" %>
+            <% team.errors.full_messages_for(:description).each do |message| %>
+                <div class="form-text text-danger"><%= message %></div>
+            <% end %>
           </div>
           <div class="my-3 form-group">
             <%=form.label :image,class:"form-label" %>
-            <%= form.file_field :image,class:"form-control",required:img %>
+            <%= form.file_field :image,class:"form-control" %>
           </div>
 
           <div class="my-3 form-group">

@@ -1,4 +1,5 @@
 class ClientRegistrationController < ApplicationController
+  before_action :authenticate_account!
   def new
     @account = Account.new
     @client=Client.new
@@ -30,7 +31,7 @@ class ClientRegistrationController < ApplicationController
   end
 
   private
-  
+
   def client_params
     params.require(:client).permit(:company, :company_location)
   end

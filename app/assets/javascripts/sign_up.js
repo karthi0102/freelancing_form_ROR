@@ -6,10 +6,8 @@ freelancer =document.getElementById("freelancer_attributes")
 
 client.style.display="none"
 freelancer.style.display="none"
-elem.addEventListener('change',drop)
 
-function drop() {
-      console.log(elem.value)
+const role_change = ()=>{
       if (elem.value == 'Client') {
           client.style.display="block"
           freelancer.style.display="none"
@@ -22,6 +20,7 @@ function drop() {
       }
 
   }
+elem.addEventListener('change',role_change)
 
 
   // document.addEventListener('DOMContentLoaded', function() {
