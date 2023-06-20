@@ -8,24 +8,22 @@ class Api::ProjectsController < Api::ApiController
   def index
     projects = Project.all
     if projects.empty?
-      render json: {message: "No Projects"},status: :OK
+      render json: {message: "No Projects"},status: :ok
     else
       render json: projects, status: :ok
     end
   end
 
   def show
-    project = Project.find_by(id:params[:id])
+ 
+    project = Project.find_by(id:params[:id].to_i)
     if project
       render json: project ,status: :ok
     else
-      render json: {message: "No project found with this is"},status: :OK
+      render json: {message: "No project found with this is id"},status: :ok
     end
   end
 
-  def new
-      @project = Project.new
-  end
 
 
 
