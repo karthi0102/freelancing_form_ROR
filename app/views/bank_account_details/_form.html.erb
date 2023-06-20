@@ -4,13 +4,14 @@
     <%=form.hidden_field :member_id ,value:@member_id.to_i %>
     <div class="form-group mb-3">
         <%=form.label :account_number,class:"form-label"%>
-        <%=form.text_field :account_number ,class:"form-control",required:true %>
+        <%=form.text_field :account_number ,class:"form-control"%>
     </div>
     <div class="form-group mb-3">
         <%=form.label :ifsc_code,class:"form-label"%>
-        <%=form.text_field :ifsc_code ,class:"form-control",required:true %>
+        <%=form.text_field :ifsc_code ,class:"form-control",min:11,max:11,required:true %>
     </div>
     <div>
-        <%=form.submit "Verify and Submit",class:"btn btn-success" %>
+        <%=form.submit "Verify and Submit",class:"btn btn-success",id:"pay-btn" %>
     </div>
 <% end %>
+

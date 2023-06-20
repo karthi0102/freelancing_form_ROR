@@ -8,9 +8,10 @@
 <% payment = @project.payment if @project.payment %>
 <% paid_status="pending" %>
 <% if payment%>
-    <% payment.account_details["values"].each do |h| %>
-    <%  h["id"] == member.id %>
-       <%paid_status = h["status"] %>
+    <%payment.account_details["values"].each do |h| %>
+    <% if h["id"] == member.id %>
+       <% paid_status = h["status"] %>
+    <% end %>
     <% end %>
 <% end %>
 
