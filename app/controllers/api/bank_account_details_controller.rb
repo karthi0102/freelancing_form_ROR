@@ -1,7 +1,5 @@
 class Api::BankAccountDetailsController < Api::ApiController
-  # before_action :is_freelancer ,only: [:new,:create]
-  # before_action :authenticate_account!
-
+  before_action :is_freelancer ,only: [:new,:create]
   def create
     b1 = if(params["account_number"].length < 8 or params["account_number"].length >12)
             true

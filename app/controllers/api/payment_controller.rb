@@ -1,7 +1,5 @@
 class Api::PaymentController < Api::ApiController
-  # before_action :is_client
-  # before_action :authenticate_account!
-
+  before_action :is_client
 
   def show
     project = Project.find_by(id:params[:id])
@@ -53,15 +51,8 @@ class Api::PaymentController < Api::ApiController
     params.permit(:project_id,:member_id,:card_number,:card_expiry,:card_cvv,:amount)
   end
   def is_client
-    unless account_signed_in? and current_account.client?
-      puts "flash"
-      flash[:error] = "Unauthorized action"
-      p flash[:error]
-      if account_signed_in?
-        redirect_to projects_path
-      else
-        redirect_to new_account_session_path
-      end
+    unless  current_account.client?
+      render json:{message:"Unauthorized action"},status: :forbidden
     end
   end
 end

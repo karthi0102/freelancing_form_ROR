@@ -1,6 +1,5 @@
 class Api::SkillsController < Api::ApiController
-  # before_action :is_freelancer
-  # before_action :authenticate_account!
+  before_action :is_freelancer
     def show
       freelancer =  Freelancer.find_by(id: params[:id])
       if freelancer
@@ -10,8 +9,7 @@ class Api::SkillsController < Api::ApiController
       end
     end
     def create
-      # freelancer = current_account.accountable if current_account.freelancer?
-      freelancer = Freelancer.last
+      freelancer = current_account.accountable if current_account.freelancer?
       if freelancer
         skill = freelancer.skills.create(skill_params)
         if skill.save and freelancer.save
@@ -26,8 +24,7 @@ class Api::SkillsController < Api::ApiController
 
 
     def destroy
-      # freelancer = current_account.accountable if current_account.freelancer?
-      freelancer = Freelancer.last
+      freelancer = current_account.accountable if current_account.freelancer?
       if freelancer
         skill = freelancer.skills.find_by(id: params[:id])
         skill.destroy
@@ -44,7 +41,6 @@ class Api::SkillsController < Api::ApiController
 
     def is_freelancer
       unless account_signed_in? and current_account.freelancer?
-
         flash[:error] = "Unauthorized action"
         if account_signed_in?
           redirect_to root_path

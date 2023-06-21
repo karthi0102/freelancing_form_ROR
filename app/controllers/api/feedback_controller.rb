@@ -1,5 +1,6 @@
 class Api::FeedbackController < Api::ApiController
-    # before_action :authenticate_account!
+    before_action :is_freelancer ,only: [:freelancer_to_client,:team_to_client]
+    before_action :is_client ,only: [:client_to_freelancer,:client_to_team]
     def show
       account = Account.find_by(id: params[:id])
       if account
@@ -97,5 +98,19 @@ class Api::FeedbackController < Api::ApiController
     def feedback_params
       params.require(:feedback).permit(:comment,:rating,:to,:from,:member_id)
     end
+
+    def is_client
+      unless  current_account.client?
+        render json:{message:"Unauthorized action"},status: :forbidden
+      end
+    end
+
+    def is_freelancer
+      unless  current_account.freelancer?
+        render json:{message:"Unauthorized action"},status: :forbidden
+      end
+    end
+
+
 
 end

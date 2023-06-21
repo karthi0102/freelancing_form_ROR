@@ -87,7 +87,7 @@ Rails.application.routes.draw do
     post 'project/apply/team/:project_id/:team_id', to:"applicant#add_team_applicant", as: "apply_project_team"
 
     patch "project/applicant/accept/:project_id/:applicant_id",to:'project_member#accept'
-    patch "project/applicant/reject/:applicant_id",to:'applicant#reject', as:'reject_applicant'
+    patch "project/applicant/reject/:project_id/:applicant_id",to:'applicant#reject', as:'reject_applicant'
 
 
     get "project/:id/members",to:"project_member#show"

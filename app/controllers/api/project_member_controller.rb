@@ -1,7 +1,8 @@
 class Api::ProjectMemberController < Api::ApiController
-  # before_action :is_client ,only: [:accept]
-  # before_action :is_project_client ,only: [:accept]
-  # before_action :authenticate_account!
+  before_action :is_client ,only: [:show,:accept]
+  before_action :is_project_client ,only: [:show,:accept]
+  before_action :is_freelancer ,only: [:completed]
+  before_action :is_project_member, only: [:completed]
   def show
     project = Project.find_by(id: params[:id])
     if project
@@ -14,6 +15,7 @@ class Api::ProjectMemberController < Api::ApiController
       render json:{message:"Project not found"},status: :ok
     end
   end
+
   def accept
     project = Project.find_by(id:params[:project_id])
     if project
@@ -88,31 +90,35 @@ class Api::ProjectMemberController < Api::ApiController
 
 private
 
-def is_client
 
-  unless account_signed_in? and current_account.client?
-    puts "flash"
-    flash[:error] = "Unauthorized action"
-    p flash[:error]
-    if account_signed_in?
-      redirect_to projects_path
-    else
-      redirect_to new_account_session_path
+
+  def is_client
+    unless  current_account.client?
+      render json:{message:"Unauthorized action"},status: :forbidden
     end
   end
-end
 
-
-
-
-def is_project_client
-
-  project_id=params[:project_id]
-  project = Project.find_by(id:project_id)
-  if current_account.accountable.id !=project.client.id
-    redirect_to root_path ,error: "Unauthorised Action"
+  def is_freelancer
+    unless  current_account.freelancer?
+      render json:{message:"Unauthorized action"},status: :forbidden
+    end
   end
-end
+
+  def is_project_client
+    project_id=params[:id] || params[:project_id]
+    project = Project.find_by(id:project_id)
+    if current_account.accountable.id !=project.client.id
+      render json:{message:"You are not authorized to do this acction"},status: :forbidden
+    end
+  end
+
+  def is_project_member
+    project = Project.find_by(id: params[:id])
+    if project.project_members.where(id :current_account.accountable).length==0
+      render json:{message:"Unauthorised action"}
+    end
+
+  end
 
 
 end

@@ -18,5 +18,4 @@ class Api::ProfileController < Api::ApiController
   end
 
 
-
 end

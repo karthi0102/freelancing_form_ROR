@@ -1,11 +1,10 @@
 class Api::ProjectsController < Api::ApiController
-  # before_action :is_client, only: [:new,:create,:edit,:update,:destroy,:set_available,:client]
-  # before_action :is_freelancer ,only: [:index]
-  # before_action :is_project_client,only: [:edit,:update,:destroy,:set_available]
-  # before_action :authenticate_account!
-
+  before_action :is_client, only: [:new,:create,:update,:destroy,:set_available,:client]
+  before_action :is_freelancer ,only: [:index]
+  before_action :is_project_client,only: [:edit,:update,:destroy,:set_available]
 
   def index
+
     projects = Project.all
     if projects.empty?
       render json: {message: "No Projects"},status: :ok
@@ -15,7 +14,7 @@ class Api::ProjectsController < Api::ApiController
   end
 
   def show
- 
+
     project = Project.find_by(id:params[:id].to_i)
     if project
       render json: project ,status: :ok
@@ -44,9 +43,6 @@ class Api::ProjectsController < Api::ApiController
   end
 
 
-  def edit
-    project = Project.find_by(id: params[:id])
-  end
 
   def update
 
@@ -78,10 +74,6 @@ class Api::ProjectsController < Api::ApiController
     end
   end
 
-  def client
-    @client = current_account.accountable
-  end
-
 
 
 
@@ -106,29 +98,14 @@ class Api::ProjectsController < Api::ApiController
   end
 
   def is_client
-
-    unless account_signed_in? and current_account.client?
-      puts "flash"
-      flash[:error] = "Unauthorized action"
-      p flash[:error]
-      if account_signed_in?
-        redirect_to projects_path
-      else
-        redirect_to new_account_session_path
-      end
+    unless  current_account.client?
+      render json:{message:"Unauthorized action"},status: :forbidden
     end
   end
 
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-
-      flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
+    unless  current_account.freelancer?
+      render json:{message:"Unauthorized action"},status: :forbidden
     end
   end
 
@@ -138,7 +115,7 @@ class Api::ProjectsController < Api::ApiController
     project_id=params[:id]
     project = Project.find_by(id:project_id)
     if current_account.accountable.id !=project.client.id
-      redirect_to root_path ,error: "Unauthorised Action"
+      render json:{message:"You are not authorized to do this acction"},status: :forbidden
     end
   end
 

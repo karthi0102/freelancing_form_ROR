@@ -60,4 +60,17 @@ class Account < ApplicationRecord
   validates :password, length: {minimum:6,message:"length must be a minimum of 6"}
   validates :description, length: {minimum:20,maximum:1500,:too_short=>"is too short",:too_long=>"is too long"}
 
+  def self.authenticate(email,password)
+    account = Account.find_for_authentication(email:email)
+    account&.valid_password?(password)? account : nil
+  end
+  has_many :access_grants,
+            class_name: 'Doorkeeper::AccessGrant',
+            foreign_key: :resource_owner_id,
+            dependent: :delete_all # or :destroy if you need callbacks
+
+  has_many :access_tokens,
+            class_name: 'Doorkeeper::AccessToken',
+            foreign_key: :resource_owner_id,
+            dependent: :delete_all #
 end

@@ -1,7 +1,7 @@
 class Api::TeamsController < Api::ApiController
-  # before_action :is_freelancer, except: [:show]
-  # before_action :is_team_admin, only: [:edit,:update,:destroy,:remove]
-  # before_action :authenticate_account!
+  before_action :is_freelancer, except: [:show]
+  before_action :is_team_admin, only: [:edit,:update,:destroy,:remove]
+
   def index
     teams = Team.all
     if teams.empty?
@@ -17,8 +17,8 @@ class Api::TeamsController < Api::ApiController
 
 
   def create
-    # @freelancer = current_account.accountable if current_account.freelancer?
-    freelancer = Freelancer.first
+    freelancer = current_account.accountable if current_account.freelancer?
+
     team_data = team_params
     image= team_data["image"]
     team_data.delete("image")
@@ -62,8 +62,8 @@ class Api::TeamsController < Api::ApiController
   end
 
   def join
-    #freelancer = current_account.accountable if current_account.freelancer?
-    freelancer = Freelancer.last
+    freelancer = current_account.accountable if current_account.freelancer?
+  
     if freelancer
       team = Team.find_by(id: params[:id])
       if team

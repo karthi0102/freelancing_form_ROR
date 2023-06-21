@@ -1,8 +1,7 @@
 class Api::ApplicantController < Api::ApiController
-  # before_action :is_freelancer , except: [:reject]
-  # before_action :is_client ,only: [:reject]
-  # before_action :authenticate_account!
-
+  before_action :is_freelancer , except: [:applicants,:reject]
+  before_action :is_client ,only: [:applicants,:reject]
+  before_action :is_project_client,only: [:applicants,:reject]
   def applicants
     project = Project.find_by(id:params[:id])
     if project
@@ -69,30 +68,24 @@ def reject
 end
 
 private
-  def is_client
-
-    unless account_signed_in? and current_account.client?
-      puts "flash"
-      flash[:error] = "Unauthorized action"
-      p flash[:error]
-      if account_signed_in?
-        redirect_to projects_path
-      else
-        redirect_to new_account_session_path
+    def is_client
+      unless  current_account.client?
+        render json:{message:"Unauthorized action"},status: :forbidden
       end
     end
-  end
 
-  def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-
-      flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
+    def is_freelancer
+      unless  current_account.freelancer?
+        render json:{message:"Unauthorized action"},status: :forbidden
       end
     end
-  end
+
+    def is_project_client
+      project_id=params[:id]
+      project = Project.find_by(id:project_id)
+      if current_account.accountable.id !=project.client.id
+        render json:{message:"You are not authorized to do this action"},status: :forbidden
+      end
+    end
+
 end
