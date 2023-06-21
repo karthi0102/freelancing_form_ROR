@@ -1,7 +1,14 @@
 class Api::SkillsController < Api::ApiController
   # before_action :is_freelancer
   # before_action :authenticate_account!
-
+    def show
+      freelancer =  Freelancer.find_by(id: params[:id])
+      if freelancer
+        render json:{freelancer:freelancer,skills:freelancer.skills},status: :ok
+      else
+        render json:{message:"Account not found"},status: :unprocessable_entity
+      end
+    end
     def create
       # freelancer = current_account.accountable if current_account.freelancer?
       freelancer = Freelancer.last

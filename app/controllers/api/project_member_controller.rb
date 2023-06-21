@@ -60,7 +60,26 @@ class Api::ProjectMemberController < Api::ApiController
       else
         render json:{message:"Project not found"},status: :ok
       end
-end
+  end
+
+  def completed
+    project = Project.find_by(id: params[:id])
+    if project
+      project_member = project.project_members.find_by(id: params[:member_id])
+      if project_member
+        if project_member.update(status:"completed")
+          render json: {message:"Status changed to completed",member:project_member},status: :ok
+        else
+          render json:{message:"Try after some time"},status: :ok
+        end
+      else
+        render json:{message:"Unkown Action"},status: :ok
+      end
+    else
+      render json:{message:"Unkown Action"},status: :ok
+    end
+  end
+
 
 
 

@@ -8,7 +8,7 @@ class Feedback < ApplicationRecord
     def randomize_id
         self.id = SecureRandom.random_number(1_000_000_000)
     end
-  validates :comment ,length: {minimum:6}
+  validates :comment ,length: {minimum:6,maximum:1500}
 
   validates :rating, presence: true
 
