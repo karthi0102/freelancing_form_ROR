@@ -4,7 +4,7 @@ class Api::ProfileController < Api::ApiController
     if freelancer
       render json:{freelancer:freelancer,account:freelancer.account,feedback:freelancer.account.recipient_feedbacks,skills:freelancer.skills,rating:freelancer.account.ratings,teams:freelancer.teams}
     else
-      render json:{message:"Profile not found"},status: :ok
+      render json:{message:"Profile not found"},status: :not_found
     end
   end
 
@@ -13,7 +13,7 @@ class Api::ProfileController < Api::ApiController
     if client
       render json:{client:client,account:client.account,project:client.projects,feedbacks:client.account.recipient_feedbacks,rating:client.account.ratings}
     else
-      render json:{message:"Profile not found"},status: :ok
+      render json:{message:"Profile not found"},status: :not_found
     end
   end
 

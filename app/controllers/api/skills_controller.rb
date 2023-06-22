@@ -5,32 +5,35 @@ class Api::SkillsController < Api::ApiController
       if freelancer
         render json:{freelancer:freelancer,skills:freelancer.skills},status: :ok
       else
-        render json:{message:"Account not found"},status: :unprocessable_entity
+        render json:{message:"Account not found"},status: :not_found
       end
     end
+
     def create
       freelancer = current_account.accountable if current_account.freelancer?
       if freelancer
         skill = freelancer.skills.create(skill_params)
         if skill.save and freelancer.save
-          render json: {message:"Skill Added to Freelacner",skill: skill},status: :ok
+          render json: {message:"Skill Added to Freelacner",skill: skill},status: :created
         else
-          render json: {message:"Skill not added "} ,status: :ok
+          render json: {message:"Skill not added "} ,status: :expectation_failed
         end
       else
-        render json: {message:"Unkown Action"},status: :ok
+        render json: {message:"Account not found"},status: :not_found
       end
     end
-
 
     def destroy
       freelancer = current_account.accountable if current_account.freelancer?
       if freelancer
         skill = freelancer.skills.find_by(id: params[:id])
-        skill.destroy
-        render json: {message:"Skill Destroyed"}
+        if skill and  skill.destroy
+          render json: {message:"Skill Destroyed"},status: :ok
+        else
+          render json:{message:"error",error:skill.errors},status: :unprocessable_entity
+        end
       else
-        render json: {message:"Unauthorised action"}
+        render json: {message:"Unauthorised action"},status: :not_found
       end
     end
 
@@ -40,14 +43,10 @@ class Api::SkillsController < Api::ApiController
     end
 
     def is_freelancer
-      unless account_signed_in? and current_account.freelancer?
-        flash[:error] = "Unauthorized action"
-        if account_signed_in?
-          redirect_to root_path
-        else
-          flash[:error] = "Unauthorized action"
-          redirect_to new_account_session_path
-        end
+      unless current_account and  current_account.freelancer?
+        render json:{message:"Unauthorized action"},status: :unauthorized
       end
     end
+
+
 end

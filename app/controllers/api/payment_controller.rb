@@ -6,7 +6,7 @@ class Api::PaymentController < Api::ApiController
     if project
         render json:{project:project,payment:project.payment},status: :ok
     else
-      render json:{message:"Project not found"},status: :ok
+      render json:{message:"Project not found"},status: :not_found
     end
   end
 
@@ -34,13 +34,13 @@ class Api::PaymentController < Api::ApiController
       end
 
       if payment.save
-        render json:payment ,status: :ok
+        render json:payment ,status: :create
       else
-        render json:{message:"Error",error:payment.errors},status: :ok
+        render json:{message:"Error",error:payment.errors},status: :unprocessable_entity
       end
 
     else
-      render json:{message:"Project not found"},status: :ok
+      render json:{message:"Project not found"},status: :not_found
     end
 
   end
@@ -51,8 +51,10 @@ class Api::PaymentController < Api::ApiController
     params.permit(:project_id,:member_id,:card_number,:card_expiry,:card_cvv,:amount)
   end
   def is_client
-    unless  current_account.client?
-      render json:{message:"Unauthorized action"},status: :forbidden
+    unless current_account and  current_account.client?
+      render json:{message:"Unauthorized action"},status: :unauthorized
     end
   end
+
+ 
 end

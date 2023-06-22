@@ -5,16 +5,11 @@ class Api::TeamsController < Api::ApiController
   def index
     teams = Team.all
     if teams.empty?
-      render json: {message:"No teams found"} ,status: :ok
+      render json: {message:"No teams found"} ,status: :no_content
     else
       render json: teams,status: :ok
     end
   end
-  def show
-    @team = Team.find(params[:id])
-  end
-
-
 
   def create
     freelancer = current_account.accountable if current_account.freelancer?
@@ -26,16 +21,17 @@ class Api::TeamsController < Api::ApiController
     team = Team.new(team_data)
     team.image.attach(image)
 
+
     if team.save
       freelancer.teams<<team
       if freelancer.save
-        render json: {message:"Team Created",team:team},status: :ok
+        render json: {message:"Team Created",team:team},status: :created
       else
         team.destroy
-        render json: {message:"Error in proccess try again"},status: :ok
+        render json: {message:"Error in proccess try again"},status: :expectation_failed
       end
     else
-        render json:{message:"Not Created",error:team.errors},status: :ok
+        render json:{message:"Not Created",error:team.errors},status: :unprocessable_entity
     end
 
   end
@@ -47,23 +43,23 @@ class Api::TeamsController < Api::ApiController
         team.save
         render json: {message:"Updated",team:team},status: :ok
     else
-      render json: {message:"Error"},status: :ok
+      render json: {message:"Error",error:team.errors},status: :unprocessable_entity
     end
   end
 
   def destroy
     team = Team.find_by(id: params[:id])
     if team and team.destroy
-      render json: {message:"Deleted team"},status: :ok
+      render json: {message:"Deleted team"},status: :see_other
     else
-      render json: {message:"Error"},status: :ok
+      render json: {message:"Error"},status: :unprocessable_entity
     end
 
   end
 
   def join
     freelancer = current_account.accountable if current_account.freelancer?
-  
+
     if freelancer
       team = Team.find_by(id: params[:id])
       if team
@@ -71,13 +67,13 @@ class Api::TeamsController < Api::ApiController
         if freelancer.save and team.save
             render json:{message:"Joined Team"},status: :ok
         else
-          render json:{message:"Cannot join team"},status: :ok
+          render json:{message:"Cannot join team"},status: :expectation_failed
         end
       else
-        render json: {message:"Team not founf"},status: :ok
+        render json: {message:"Team not found"},status: :not_found
       end
     else
-      render json: {message:"Account not found"},status: :ok
+      render json: {message:"Account not found"},status: :not_found
     end
   end
 
@@ -88,12 +84,12 @@ class Api::TeamsController < Api::ApiController
       if freelancer.teams.delete(team)
         freelancer.save
         team.save
-        render json:{message:"Removed freelancer from team "},status: :ok
+        render json:{message:"Removed freelancer from team "},status: :see_other
       else
-        render json:{message:"Error while removing freelancer from team"},status: :ok
+        render json:{message:"Error while removing freelancer from team"},status: :expectation_failed
       end
     else
-      render json:{message:"Details not Found"},status: :ok
+      render json:{message:"Details not Found"},status: :not_found
     end
 
   end
@@ -108,23 +104,15 @@ class Api::TeamsController < Api::ApiController
     team_id =  params[:id]
     team = Team.find_by(id: team_id)
     unless team and team.admin == current_account.accountable
-      flash[:error]="Unauthorized action"
-      redirect_to teams_path(team)
+      render json:{message:"Unauthorized"},status: :unauthorized
     end
   end
 
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-
-      flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
+    unless current_account and  current_account.freelancer?
+      render json:{message:"Unauthorized action"},status: :unauthorized
     end
   end
-
+  
 end
 

@@ -19,6 +19,7 @@ Doorkeeper.configure do
   skip_client_authentication_for_password_grant true
 
 
+
   grant_flows %w[password client_credentials]
   # If you didn't skip applications controller from Doorkeeper routes in your application routes.rb
   # file then you need to declare this block in order to restrict access to the web interface for
@@ -29,9 +30,9 @@ Doorkeeper.configure do
     # Put your admin authentication logic here.
     # Example implementation:
 
-    unless current_account
-      redirect_to new_account_session_path
-    end
+    # unless current_account
+    #   redirect_to new_account_session_path
+    # end
   end
 
 

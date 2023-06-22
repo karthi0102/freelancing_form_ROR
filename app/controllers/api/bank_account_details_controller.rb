@@ -25,12 +25,12 @@ class Api::BankAccountDetailsController < Api::ApiController
         payment=project.payment
         payment.account_details["values"]<<new_hash
         if payment.save and project.save
-          render json:{message:"Account Details added",payment:payment},status: :ok
+          render json:{message:"Account Details added",payment:payment},status: :created
         else
           render json:{message:"Error",error:payment.errors},status: :unprocessable_entity
         end
       else
-        render json:{message:"Project not found"},status: :un
+        render json:{message:"Project not found"},status: :not_found
       end
     else
      render json:{message:"wrong data"},status: :unprocessable_entity
@@ -43,16 +43,13 @@ class Api::BankAccountDetailsController < Api::ApiController
       params.permit(:project_id, :member_id, :account_number,:ifsc_code)
   end
 
+ 
+
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-      p "flash recorded"
-      flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
+    unless current_account and  current_account.freelancer?
+      render json:{message:"Unauthorized action"},status: :unauthorized
     end
   end
+
+
 end

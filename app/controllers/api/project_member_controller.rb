@@ -7,12 +7,12 @@ class Api::ProjectMemberController < Api::ApiController
     project = Project.find_by(id: params[:id])
     if project
       if project.project_members.empty?
-        render json:{message:"No Project Members"},status: :ok
+        render json:{message:"No Project Members"},status: :no_content
       else
         render json:{project:project,project_members:project.project_members},status: :ok
       end
     else
-      render json:{message:"Project not found"},status: :ok
+      render json:{message:"Project not found"},status: :not_found
     end
   end
 
@@ -55,12 +55,12 @@ class Api::ProjectMemberController < Api::ApiController
 
           applicant.save
           project.save
-          render json:{message:"Accepted",project_member:project_member,project:project}
+          render json:{message:"Accepted",project_member:project_member,project:project},status: :created
         else
-          render json:{message: "Applicant not found"},status: :ok
+          render json:{message: "Applicant not found"},status: :not_found
         end
       else
-        render json:{message:"Project not found"},status: :ok
+        render json:{message:"Project not found"},status: :not_found
       end
   end
 
@@ -72,13 +72,13 @@ class Api::ProjectMemberController < Api::ApiController
         if project_member.update(status:"completed")
           render json: {message:"Status changed to completed",member:project_member},status: :ok
         else
-          render json:{message:"Try after some time"},status: :ok
+          render json:{message:"Try after some time"},status: :unprocessable_entity
         end
       else
-        render json:{message:"Unkown Action"},status: :ok
+        render json:{message:"Project Member not found"},status: :not_found
       end
     else
-      render json:{message:"Unkown Action"},status: :ok
+      render json:{message:"Project not found"},status: :not_found
     end
   end
 
@@ -89,33 +89,30 @@ class Api::ProjectMemberController < Api::ApiController
 
 
 private
-
-
-
-  def is_client
-    unless  current_account.client?
-      render json:{message:"Unauthorized action"},status: :forbidden
+    def is_client
+      unless current_account and  current_account.client?
+        render json:{message:"Unauthorized action"},status: :unauthorized
+      end
     end
-  end
 
-  def is_freelancer
-    unless  current_account.freelancer?
-      render json:{message:"Unauthorized action"},status: :forbidden
+    def is_freelancer
+      unless current_account and  current_account.freelancer?
+        render json:{message:"Unauthorized action"},status: :unauthorized
+      end
     end
-  end
 
   def is_project_client
     project_id=params[:id] || params[:project_id]
     project = Project.find_by(id:project_id)
     if current_account.accountable.id !=project.client.id
-      render json:{message:"You are not authorized to do this acction"},status: :forbidden
+      render json:{message:"You are not authorized to do this acction"},status: :unauthorized
     end
   end
 
   def is_project_member
     project = Project.find_by(id: params[:id])
     if project.project_members.where(id :current_account.accountable).length==0
-      render json:{message:"Unauthorised action"}
+      render json:{message:"Unauthorised action"},status: :unauthorized
     end
 
   end

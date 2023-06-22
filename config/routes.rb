@@ -78,8 +78,15 @@ Rails.application.routes.draw do
     get "profile/freelancer/:id", to:"profile#freelancer" ,as:"freelancer_profile"
 
 
-    get 'projects/my', to:"projects#client", as:'my_projects'
+
+    get 'projects/client', to:"projects#client"
+    get "projects/freelancer",to:"projects#freelancer"
+    get "projects/team/:id",to:"projects#team"
     get "projects/available",to:"projects#available_projects"
+
+
+    get "freelancers/all",to:"account#freelancers"
+    get "clients/all",to:"account#clients"
 
 
     get "projects/:id/applicants", to:"applicant#applicants"
@@ -89,6 +96,8 @@ Rails.application.routes.draw do
     patch "project/applicant/accept/:project_id/:applicant_id",to:'project_member#accept'
     patch "project/applicant/reject/:project_id/:applicant_id",to:'applicant#reject', as:'reject_applicant'
 
+    get "freelancer/applications/:id",to:"applicant#freelancer_applications"
+    get "team/applications/:id",to:"applicant#team_applications"
 
     get "project/:id/members",to:"project_member#show"
     patch "project_member/change_status/:id/:member_id",to:"project_member#completed"
@@ -103,7 +112,7 @@ Rails.application.routes.draw do
     patch "teams/remove/:id/:freelancer_id", to:"teams#remove", as:"remove_freelancer"
 
 
-    get "feedbacks/:id",to:"feedback#show"
+    get "feedbacks",to:"feedback#show"
     post "feedback/freelancer/client/",to:"feedback#freelancer_to_client"
     post "feedback/team/client",to:"feedback#team_to_client"
     post "feedback/client/freelancer",to:"feedback#client_to_freelancer"
