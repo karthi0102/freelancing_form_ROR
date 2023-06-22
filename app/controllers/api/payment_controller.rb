@@ -56,5 +56,5 @@ class Api::PaymentController < Api::ApiController
     end
   end
 
- 
+
 end

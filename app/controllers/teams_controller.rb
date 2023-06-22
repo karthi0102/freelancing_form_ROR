@@ -6,8 +6,13 @@ class TeamsController < ApplicationController
     @teams = Team.all
   end
   def show
-    @team = Team.find(params[:id])
+    if @team = Team.find_by(id: params[:id])
+      @team
+    else
+      redirect_to root_path ,error:"Not found"
+    end
   end
+
 
   def new
     @team = Team.new

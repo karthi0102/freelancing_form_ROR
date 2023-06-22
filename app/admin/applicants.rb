@@ -17,7 +17,7 @@ ActiveAdmin.register Applicant do
   end
   #
   scope :all
-  
+
 
   index do
     column "Applicant", :applicable

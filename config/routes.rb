@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   use_doorkeeper
   devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
+  ActiveAdmin.routes(self) 
 
   devise_for :accounts, controllers: {
     sessions: 'accounts/sessions',
@@ -77,7 +77,7 @@ Rails.application.routes.draw do
     get "profile/client/:id", to:"profile#client", as:'client_profile'
     get "profile/freelancer/:id", to:"profile#freelancer" ,as:"freelancer_profile"
 
-
+    get "landing",to:"landing#index"
 
     get 'projects/client', to:"projects#client"
     get "projects/freelancer",to:"projects#freelancer"
