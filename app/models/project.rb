@@ -9,9 +9,9 @@ class Project < ApplicationRecord
   scope :available, -> { where(:available => true) }
   scope :unavailable, -> {where(:available => false)}
 
-  validates :name, length: { in: 5..30 ,message:"should minimum of 5 and maximum of 30 characters" }
-  validates :description , length: {minimum:20,maximum:3000}
-  validates :amount, presence: true
+  validates :name, length: { in: 5..20 ,message:"should minimum of 5 and maximum of 30 characters" }
+  validates :description , length: {minimum:20,maximum:500}
+  validates :amount, numericality: {only_integer:true,greater_than_or_equal_to: 5000}
 
   before_create :set_available
 
@@ -27,7 +27,6 @@ class Project < ApplicationRecord
     def randomize_id
         self.id = SecureRandom.random_number(1_000_000_000)
     end
-
-
+    
 end
 

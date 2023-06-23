@@ -18,6 +18,6 @@ class Freelancer < ApplicationRecord
     end
 
   validates :github ,presence: true
-  validates :experience ,length: {minimum:20,maximum:1500,:too_short=>"is too short",:too_long=>"is too long"}
+  validates :experience ,length: {minimum:20,maximum:500,:too_short=>"is too short",:too_long=>"is too long"}
 end
 

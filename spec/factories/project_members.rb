@@ -10,6 +10,7 @@ FactoryBot.define do
       association :memberable,
       factory: :team
     end
+    project
 
   end
 end

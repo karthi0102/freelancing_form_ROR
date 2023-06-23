@@ -13,7 +13,7 @@ class Team < ApplicationRecord
     end
 
     validates :name ,length: {minimum:5,maximum:20}
-    validates :description ,length: {minimum:20,maximum:3000}
+    validates :description ,length: {minimum:20,maximum:500}
 
 end
 

@@ -4,6 +4,10 @@ class Applicant < ApplicationRecord
 
   before_create :randomize_id
 
+  before_create :set_status
+  def set_status
+    self.status="applied"
+  end
 
   private
     def randomize_id

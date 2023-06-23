@@ -16,6 +16,7 @@ class Account < ApplicationRecord
   def recipient_feedbacks
     received_feedbacks
   end
+  
   def creator_feedbacks
     created_feedbacks
   end
@@ -53,12 +54,13 @@ class Account < ApplicationRecord
     end
 
 
-  validates :name, length: { in: 5..30 }
+  validates :name, length: { in: 5..20 }
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP ,message:"Invalid Email" }
   validates :phone ,length: { is:10 ,message:"Invalid Phone Number"}
   validates :gender, inclusion: { in: %w(male female trasgender others),message: "%{value} is not a valid gender" }
   validates :password, length: {minimum:6,message:"length must be a minimum of 6"}
-  validates :description, length: {minimum:20,maximum:1500,:too_short=>"is too short",:too_long=>"is too long"}
+  validates :description, length: {minimum:20,maximum:500,:too_short=>"is too short",:too_long=>"is too long"}
+
 
   def self.authenticate(email,password)
     account = Account.find_for_authentication(email:email)
