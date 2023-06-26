@@ -1,8 +1,8 @@
 class ProjectsController < ApplicationController
+  before_action :authenticate_account!
   before_action :is_client, only: [:new,:create,:edit,:update,:destroy,:set_available,:client]
   before_action :is_freelancer ,only: [:index]
   before_action :is_project_client,only: [:edit,:update,:destroy,:set_available]
-  before_action :authenticate_account!
 
 
   def index
@@ -10,8 +10,12 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    @project = Project.find_by(id:params[:id])
-    @freelancer = current_account.accountable if current_account.freelancer?
+    if @project = Project.find_by(id:params[:id])
+       @project
+       @freelancer = current_account.accountable if current_account.freelancer?
+    else
+      redirect_to root_path
+    end
 
   end
 
@@ -37,7 +41,11 @@ class ProjectsController < ApplicationController
 
 
   def edit
-    @project = Project.find(params[:id])
+    if @project = Project.find(params[:id])
+      @project
+    else
+      redirect_to  root_path
+    end
   end
 
   def update
@@ -50,11 +58,16 @@ class ProjectsController < ApplicationController
       render :edit, status: :unprocessable_entity
     end
   end
-  def destroy
-    project = Project.find(params[:id])
-    project.destroy
 
-    redirect_to projects_path, status: :see_other
+
+  def destroy
+    project = Project.find_by(id: params[:id])
+    if project and project.destroy
+      redirect_to my_projects_path, status: :see_other
+    else
+      redirect_to root_path ,error:"Error while deleting"
+    end
+
   end
 
 
@@ -67,10 +80,13 @@ class ProjectsController < ApplicationController
 
 
   def set_available
-    @project = Project.find(params[:id])
-    @project.available=!@project.available
-    @project.save
-    redirect_to project_path(@project)
+    project = Project.find_by(id: params[:id])
+    if project and project.update(available:!project.available)
+      redirect_to project_path(project)
+    else
+      redirect_to root_path
+    end
+
   end
 
 
@@ -82,28 +98,18 @@ class ProjectsController < ApplicationController
 
   def is_client
 
-    unless account_signed_in? and current_account.client?
-      puts "flash"
+    unless current_account.client?
       flash[:error] = "Unauthorized action"
-      p flash[:error]
-      if account_signed_in?
-        redirect_to projects_path
-      else
-        redirect_to new_account_session_path
-      end
+      redirect_to projects_path
     end
   end
 
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
+    unless  current_account.freelancer?
 
       flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
+      redirect_to root_path
+
     end
   end
 
@@ -112,8 +118,12 @@ class ProjectsController < ApplicationController
 
     project_id=params[:id]
     project = Project.find_by(id:project_id)
-    if current_account.accountable.id !=project.client.id
-      redirect_to root_path ,error: "Unauthorised Action"
+    if project
+      if current_account.accountable.id !=project.client.id
+        redirect_to root_path ,error: "Unauthorised Action"
+      end
+    else
+      redirect_to root_path,error:"Not found"
     end
   end
 

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Account, type: :model do
-  
+
    describe "Validation on Name Field" do
      before(:each) do
        account.validate
@@ -145,6 +145,25 @@ RSpec.describe Account, type: :model do
         expect(account.errors).to include(:phone)
       end
     end
+    context "when phone contains other characters" do
+      let(:account){build(:account,phone:"9856p$6641")}
+      before do
+        account.save
+      end
+      it "should return false" do
+        expect(account.errors).to include(:phone)
+      end
+    end
+
+    context "when contact only contains zero" do
+      let(:account){build(:account,phone:"0000000000")}
+      before do
+        account.save
+      end
+      it "should return false" do
+        expect(account.errors).to include(:phone)
+      end
+    end
 
     context "when phone length is  10 " do
       let(:account){build(:account)}
@@ -229,6 +248,29 @@ RSpec.describe Account, type: :model do
         end
       end
 
+      context "when password does not matches password confirmation" do
+        let(:account) {build(:account,password:"123456",password_confirmation:"1234567")}
+
+        before do
+          account.save
+        end
+
+        it "should return false" do
+          expect(account.errors).to include(:password_confirmation)
+        end
+      end
+      context "when password does  matches password confirmation" do
+        let(:account) {build(:account,password:"123456",password_confirmation:"123456")}
+
+        before do
+          account.save
+        end
+
+        it "should return true" do
+          expect(account.errors).to_not include(:password_confirmation)
+        end
+      end
+
       context "when password is less than 6 charaters" do
         let(:account) {build(:account,password:"123",password_confirmation:"123")}
 
@@ -248,7 +290,7 @@ RSpec.describe Account, type: :model do
           account.save
         end
 
-        it "should return false" do
+        it "should return true" do
           expect(account.errors).to_not include(:password)
         end
       end
@@ -336,6 +378,14 @@ RSpec.describe Account, type: :model do
         end
       end
 
+      context "has_many" do
+          [:received_feedbacks,:created_feedbacks].each do |each|
+            it each.to_s.humanize do
+                association = Account.reflect_on_association(each).macro
+                expect(association).to be(:has_many)
+            end
+          end
+      end
 
   end
 

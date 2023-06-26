@@ -98,4 +98,32 @@ RSpec.describe Freelancer, type: :model do
 
   end
 
+  describe "associations" do
+    context "has_many" do
+      [:project_members,:applicants,:skills].each do |each|
+        it each.to_s.humanize do
+          association = Freelancer.reflect_on_association(each).macro
+          expect(association).to be(:has_many)
+        end
+      end
+    end
+    context "has_one" do
+      [:account].each do |each|
+        it each.to_s.humanize do
+          association = Freelancer.reflect_on_association(each).macro
+          expect(association).to be(:has_one)
+        end
+      end
+    end
+    context "has_and_belongs_to_many" do
+      [:teams].each do |each|
+        it each.to_s.humanize do
+          association = Freelancer.reflect_on_association(each).macro
+          expect(association).to be(:has_and_belongs_to_many)
+        end
+      end
+    end
+  end
+
 end
+

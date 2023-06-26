@@ -260,6 +260,23 @@ RSpec.describe Project, type: :model do
         end
       end
 
+      context "has_many" do
+        [:project_members,:applicants].each do |each|
+          it each.to_s.humanize do
+            association = Project.reflect_on_association(each).macro
+            expect(association).to be(:has_many)
+          end
+        end
+      end
+      context "has_one" do
+        [:project_status].each do |each|
+          it each.to_s.humanize do
+            association = Project.reflect_on_association(each).macro
+            expect(association).to be(:has_one)
+          end
+        end
+      end
+
   end
 
   describe "callbacks" do
@@ -273,5 +290,6 @@ RSpec.describe Project, type: :model do
       end
     end
   end
+
 
 end

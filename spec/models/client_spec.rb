@@ -65,4 +65,25 @@ RSpec.describe Client, type: :model do
     end
   end
 
+  describe "association" do
+    context "has_many" do
+      [:projects].each do |each|
+        it each.to_s.humanize do
+          association = Client.reflect_on_association(each).macro
+          expect(association).to be(:has_many)
+        end
+      end
+    end
+    context "has_one" do
+      [:account].each do |each|
+        it each.to_s.humanize do
+          association = Client.reflect_on_association(each).macro
+          expect(association).to be(:has_one)
+        end
+      end
+    end
+  end
+
 end
+
+
