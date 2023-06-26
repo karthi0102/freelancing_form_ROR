@@ -1,6 +1,6 @@
 class BankAccountDetailsController < ApplicationController
-  before_action :is_freelancer ,only: [:new,:create]
   before_action :authenticate_account!
+  before_action :is_freelancer ,only: [:new,:create]
   def new
     @project_id = params[:project_id].to_i
     @member_id = params[:member_id].to_i
@@ -17,7 +17,7 @@ class BankAccountDetailsController < ApplicationController
     else
       false
     end
-    
+
     if !b1 and !b2
       params = bank_account_details_params
       project = Project.find_by(id: params[:project_id])
@@ -39,7 +39,7 @@ class BankAccountDetailsController < ApplicationController
               if project_member.memberable_type=="Freelancer"
                 redirect_to new_feedback_path(to:project.client.account,from:project_member.memberable.account,member_id:project_member)
               else
-                redirect_to new_feedback_path(to:project.client.account,from:project_member.memberable.admin.account,member_id:project_member)
+                redirect_to new_team_feedback_path(to:project.client.account,from:project_member.memberable.admin.account,member_id:project_member)
               end
           end
         end
@@ -57,15 +57,9 @@ class BankAccountDetailsController < ApplicationController
   end
 
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-      p "flash recorded"
+    unless   current_account.freelancer?
       flash[:error] = "Unauthorized action"
-      if account_signed_in?
         redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
     end
   end
 

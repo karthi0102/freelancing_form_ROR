@@ -1,7 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe "ProjectStatuses", type: :request do
-  describe "GET /index" do
-    pending "add some examples (or delete) #{__FILE__}"
-  end
+RSpec.describe ProjectStatusController, type: :controller do
+
 end

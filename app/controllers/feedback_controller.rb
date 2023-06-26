@@ -1,6 +1,7 @@
 class FeedbackController < ApplicationController
 
   before_action :authenticate_account!
+
   def new
     @feedback=Feedback.new
     @to=params[:to].to_i

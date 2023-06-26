@@ -1,6 +1,6 @@
 class PaymentController < ApplicationController
-  before_action :is_client
   before_action :authenticate_account!
+  before_action :is_client
   def new
     @project = Project.find(params[:project_id].to_i)
     @member = @project.project_members.find(params[:member_id].to_i)
@@ -36,15 +36,9 @@ class PaymentController < ApplicationController
     params.permit(:project_id,:member_id,:card_number,:card_expiry,:card_cvv,:amount)
   end
   def is_client
-    unless account_signed_in? and current_account.client?
-      puts "flash"
+    unless current_account.client?
       flash[:error] = "Unauthorized action"
-      p flash[:error]
-      if account_signed_in?
-        redirect_to projects_path
-      else
-        redirect_to new_account_session_path
-      end
+      redirect_to projects_path
     end
   end
 end

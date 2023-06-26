@@ -1,12 +1,12 @@
 class ApplicantController < ApplicationController
+  before_action :authenticate_account!
   before_action :is_freelancer , except: [:reject]
   before_action :is_client ,only: [:reject]
-  before_action :authenticate_account!
 
 
 
   def add_freelancer_applicant
-    project = Project.find(params[:id])
+    project = Project.find_by(id:params[:id])
     if project
       freelancer = current_account.accountable if current_account.freelancer?
       applicant =  freelancer.applicants.create(status:"applied")
@@ -58,28 +58,16 @@ end
 private
   def is_client
 
-    unless account_signed_in? and current_account.client?
-      puts "flash"
+    unless  current_account.client?
       flash[:error] = "Unauthorized action"
-      p flash[:error]
-      if account_signed_in?
-        redirect_to projects_path
-      else
-        redirect_to new_account_session_path
-      end
+      redirect_to projects_path
     end
   end
 
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-
+    unless current_account.freelancer?
       flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
+      redirect_to root_path
     end
   end
 

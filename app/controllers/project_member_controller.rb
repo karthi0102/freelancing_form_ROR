@@ -1,7 +1,7 @@
 class ProjectMemberController < ApplicationController
+  before_action :authenticate_account!
   before_action :is_client ,only: [:accept]
   before_action :is_project_client ,only: [:accept]
-  before_action :authenticate_account!
   def accept
     project = Project.find_by(id:params[:project_id])
     if project
@@ -41,6 +41,7 @@ class ProjectMemberController < ApplicationController
 
           applicant.save
           project.save
+          redirect_to project_path(project),notice:"Rejected"
         else
           redirect_to project_path(project) ,error:"Applicant Not Found"
         end
@@ -48,7 +49,7 @@ class ProjectMemberController < ApplicationController
         redirect_to root_path ,error:"Unkown Action"
       end
 
-    redirect_to project_path(project)
+   
 end
 
 
@@ -59,16 +60,9 @@ end
 private
 
 def is_client
-
-  unless account_signed_in? and current_account.client?
-    puts "flash"
+  unless  current_account.client?
     flash[:error] = "Unauthorized action"
-    p flash[:error]
-    if account_signed_in?
-      redirect_to projects_path
-    else
-      redirect_to new_account_session_path
-    end
+    redirect_to projects_path
   end
 end
 
@@ -79,7 +73,7 @@ def is_project_client
 
   project_id=params[:project_id]
   project = Project.find_by(id:project_id)
-  if current_account.accountable.id !=project.client.id
+  if project and current_account.accountable.id !=project.client.id
     redirect_to root_path ,error: "Unauthorised Action"
   end
 end

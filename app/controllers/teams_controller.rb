@@ -1,7 +1,7 @@
 class TeamsController < ApplicationController
+  before_action :authenticate_account!
   before_action :is_freelancer, except: [:show]
   before_action :is_team_admin, only: [:edit,:update,:destroy,:remove]
-  before_action :authenticate_account!
   def index
     @teams = Team.all
   end
@@ -26,13 +26,12 @@ class TeamsController < ApplicationController
     team_data["admin"]=@freelancer
     @team = Team.new(team_data)
     @team.image.attach(image)
-    puts "hii"
-
 
     if @team.save
 
       @freelancer.teams<<@team
       if @freelancer.save
+        flash[:notice]="Created New Team"
         redirect_to team_path(@team)
       else
         @team.destroy
@@ -60,31 +59,47 @@ class TeamsController < ApplicationController
 
   def destroy
     team = Team.find(params[:id])
-    team.destroy
-    redirect_to teams_path ,status: :see_other
+    if team.destroy
+      redirect_to teams_path ,status: :see_other
+    else
+      redirect_to root_path,error:"cant delete team"
+    end
   end
 
   def join
     freelancer = current_account.accountable if current_account.freelancer?
     if freelancer
-    team = Team.find(params[:team_id])
-
-    if freelancer and team
-      freelancer.teams<<team
-      freelancer.save
-      team.save
-      redirect_to team_path(team)
+      team = Team.find(params[:team_id])
+      if team and team.freelancers.where(id:freelancer.id).length==0
+        freelancer.teams<<team
+        if freelancer.save and team.save
+          redirect_to team_path(team),notice:"Joined in a team"
+        else
+          redirect_to team_path(team),error:"Error while joining a team"
+        end
+      else
+          redirect_to teams_path
+      end
+    else
+      redirect_to root_path
     end
   end
-  end
+
 
   def remove
-    freelancer = Freelancer.find(params[:freelancer_id])
-    team=Team.find(params[:id])
-    freelancer.teams.delete(team)
-    freelancer.save
-    team.save
-    redirect_to teams_path(team)
+    freelancer = Freelancer.find_by(id:params[:freelancer_id])
+    team=Team.find_by(id: params[:id])
+    if freelancer and team
+      freelancer.teams.delete(team)
+      if freelancer.save and team.save
+        redirect_to team_path(team)
+      else
+        redirect_to root_path
+      end
+    else
+      redirect_to root_path
+    end
+
   end
 
   private
@@ -98,21 +113,17 @@ class TeamsController < ApplicationController
     team = Team.find_by(id: team_id)
     unless team and team.admin == current_account.accountable
       flash[:error]="Unauthorized action"
-      redirect_to teams_path(team)
+      redirect_to root_path
     end
   end
 
   def is_freelancer
-    unless account_signed_in? and current_account.freelancer?
-
+    unless current_account.freelancer?
       flash[:error] = "Unauthorized action"
-      if account_signed_in?
-        redirect_to root_path
-      else
-        flash[:error] = "Unauthorized action"
-        redirect_to new_account_session_path
-      end
+      redirect_to root_path
     end
+
+
   end
 
 end

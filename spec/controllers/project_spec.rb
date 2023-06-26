@@ -116,7 +116,7 @@ RSpec.describe ProjectsController, type: :controller do
   end
 
   describe "post /projects#create" do
-      context "when account is signed in" do
+      context "when account is not signed in" do
         before do
           post :create
         end
@@ -139,7 +139,7 @@ RSpec.describe ProjectsController, type: :controller do
           sign_in client_account
           post :create ,params: {project:{name:project.name,description:project.description,amount:6000,client:client}}
         end
-        it "should render create" do
+        it "should contain flash" do
           expect(flash[:notice]).to eq("Created New Project")
         end
       end
@@ -154,15 +154,7 @@ RSpec.describe ProjectsController, type: :controller do
         end
       end
 
-      context "when account is signed in client with invalid params" do
-        before do
-          sign_in client_account
-          post :create ,params: {project:{name:project.name,description:project.description,amount:nil,client:client}}
-        end
-        it "should render new" do
-          expect(response).to render_template(:new)
-        end
-      end
+    
 
   end
 

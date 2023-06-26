@@ -1,4 +1,5 @@
 class Api::ProfileController < Api::ApiController
+  
   def freelancer
     freelancer = Freelancer.find_by(id: params[:id])
     if freelancer
