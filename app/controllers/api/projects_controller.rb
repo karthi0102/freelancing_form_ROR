@@ -1,6 +1,6 @@
 class Api::ProjectsController < Api::ApiController
   before_action :is_client, only: [:new,:create,:update,:destroy,:set_available,:client]
-  before_action :is_freelancer ,only: [:index,:freelancer]
+  before_action :is_freelancer ,only: [:index,:freelancer,:available_projects]
   before_action :is_project_client,only: [:edit,:update,:destroy,:set_available]
 
 
@@ -54,7 +54,7 @@ class Api::ProjectsController < Api::ApiController
     if project and  project.update(project_params)
       render json: {message:"Updated",project:project}, status: :ok
     else
-      render json: {message:project.error},status: :unprocessable_entity
+      render json: {message:project.errors},status: :unprocessable_entity
     end
 
   end
@@ -150,7 +150,7 @@ class Api::ProjectsController < Api::ApiController
 
     project_id=params[:id]
     project = Project.find_by(id:project_id)
-    if current_account.accountable.id !=project.client.id
+    if project and current_account.accountable.id !=project.client.id
       render json:{message:"You are not authorized to do this acction"},status: :unauthorized
     end
   end

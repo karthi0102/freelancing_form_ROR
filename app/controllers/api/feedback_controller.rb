@@ -56,7 +56,7 @@ class Api::FeedbackController < Api::ApiController
       freelancer = Account.find_by(id: feedback_data["to"].to_i)
       client = Account.find_by(id: feedback_data["from"].to_i)
       project_member = ProjectMember.find_by(id: feedback_data["member_id"].to_i)
-      puts
+      
       if freelancer and client and project_member
         feedback = Feedback.new(comment: feedback_data["comment"], rating:feedback_data["rating"],created:client,recipient:freelancer)
         if feedback.save and project_member.update(feedback:true)

@@ -13,15 +13,12 @@ class Api::TeamsController < Api::ApiController
 
   def create
     freelancer = current_account.accountable if current_account.freelancer?
-
     team_data = team_params
     image= team_data["image"]
     team_data.delete("image")
     team_data["admin"]=freelancer
     team = Team.new(team_data)
     team.image.attach(image)
-
-
     if team.save
       freelancer.teams<<team
       if freelancer.save
@@ -110,9 +107,10 @@ class Api::TeamsController < Api::ApiController
 
   def is_freelancer
     unless current_account and  current_account.freelancer?
+
       render json:{message:"Unauthorized action"},status: :unauthorized
     end
   end
-  
+
 end
 

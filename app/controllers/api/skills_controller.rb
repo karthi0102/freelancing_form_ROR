@@ -1,7 +1,8 @@
 class Api::SkillsController < Api::ApiController
+
   before_action :is_freelancer
     def show
-      freelancer =  Freelancer.find_by(id: params[:id])
+      freelancer =  current_account.accountable if current_account.freelancer?
       if freelancer
         render json:{freelancer:freelancer,skills:freelancer.skills},status: :ok
       else
@@ -28,9 +29,9 @@ class Api::SkillsController < Api::ApiController
       if freelancer
         skill = freelancer.skills.find_by(id: params[:id])
         if skill and  skill.destroy
-          render json: {message:"Skill Destroyed"},status: :ok
+          render json: {message:"Skill Destroyed"},status: :see_other
         else
-          render json:{message:"error",error:skill.errors},status: :unprocessable_entity
+          render json:{message:"error"},status: :unprocessable_entity
         end
       else
         render json: {message:"Unauthorised action"},status: :not_found

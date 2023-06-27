@@ -1,7 +1,7 @@
 class Api::ApplicantController < Api::ApiController
-  before_action :is_freelancer , except: [:applicants,:reject]
+  before_action :is_freelancer , only: [:freelancer_applications,:team_applications,:add_freelancer_applicant,:add_team_applicant]
+  before_action :is_project_client, only: [:applicants,:reject]
   before_action :is_client ,only: [:applicants,:reject]
-  before_action :is_project_client,only: [:applicants,:reject]
 
   def applicants
     project = Project.find_by(id:params[:id])
@@ -13,7 +13,7 @@ class Api::ApplicantController < Api::ApiController
   end
 
   def freelancer_applications
-    freelancer = Freelancer.find_by(id: params[:id])
+    freelancer = current_account.accountable
     if freelancer
       render json:{
         applied:freelancer.applicants.where(status:"applied"),
@@ -42,8 +42,7 @@ class Api::ApplicantController < Api::ApiController
   def add_freelancer_applicant
     project = Project.find_by(id: params[:id])
     if project
-      #freelancer = current_account.accountable if current_account.freelancer?
-      freelancer = Freelancer.last
+      freelancer = current_account.accountable if current_account.freelancer?
       applicant =  freelancer.applicants.create(status:"applied")
       project.applicants<<applicant
       if applicant.save and project.save and freelancer.save
@@ -57,6 +56,7 @@ class Api::ApplicantController < Api::ApiController
 end
 
 def add_team_applicant
+
   project = Project.find_by(id: params[:project_id]);
   if project
     team = Team.find_by(id: params[:team_id])
@@ -80,20 +80,27 @@ end
 
 
 def reject
-  applicant = Applicant.find_by(id: params[:applicant_id])
-  if applicant
-    if applicant.update(status:"rejected")
-      render json:{message:"Rejected",applicant:applicant},status: :ok
+
+  project = Project.find_by(id: params[:project_id])
+  if project
+    applicant = project.applicants.find(params[:applicant_id])
+    if applicant
+      if applicant.update(status:"rejected")
+        render json:{message:"Rejected",applicant:applicant},status: :ok
+      else
+        render json:{message:"Error while process"},status: :unprocessable_entity
+      end
     else
-      render json:{message:"Error while process"},status: :unprocessable_entity
+      render json:{message:"Applicant not found"},status: :not_found
     end
   else
-    render json:{message:"Applicant not found"},status: :not_found
+    render json:{message:"Project not found"},status: :not_found
   end
 end
 
 private
     def is_client
+
       unless current_account and  current_account.client?
         render json:{message:"Unauthorized action"},status: :unauthorized
       end
@@ -105,9 +112,11 @@ private
       end
     end
     def is_project_client
-      project_id=params[:id]
+      project_id=params[:project_id] || params[:id]
       project = Project.find_by(id:project_id)
-      if current_account.accountable.id !=project.client.id
+
+      if project and current_account.accountable.id != project.client.id
+
         render json:{message:"You are not authorized to do this action"},status: :unauthorized
       end
     end

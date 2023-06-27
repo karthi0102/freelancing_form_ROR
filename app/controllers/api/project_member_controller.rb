@@ -55,7 +55,7 @@ class Api::ProjectMemberController < Api::ApiController
 
           applicant.save
           project.save
-          render json:{message:"Accepted",project_member:project_member,project:project},status: :created
+          render json:{message:"Accepted",project_member:project_member,project:project},status: :ok
         else
           render json:{message: "Applicant not found"},status: :not_found
         end
@@ -104,14 +104,14 @@ private
   def is_project_client
     project_id=params[:id] || params[:project_id]
     project = Project.find_by(id:project_id)
-    if current_account.accountable.id !=project.client.id
+    if project and current_account.accountable.id !=project.client.id
       render json:{message:"You are not authorized to do this acction"},status: :unauthorized
     end
   end
 
   def is_project_member
     project = Project.find_by(id: params[:id])
-    if project.project_members.where(id :current_account.accountable).length==0
+    if project and current_account.accountable.projects.where(id: project).length==0
       render json:{message:"Unauthorised action"},status: :unauthorized
     end
 

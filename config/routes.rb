@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   use_doorkeeper
   devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self) 
+  ActiveAdmin.routes(self)
 
   devise_for :accounts, controllers: {
     sessions: 'accounts/sessions',
@@ -96,7 +96,7 @@ Rails.application.routes.draw do
     patch "project/applicant/accept/:project_id/:applicant_id",to:'project_member#accept'
     patch "project/applicant/reject/:project_id/:applicant_id",to:'applicant#reject', as:'reject_applicant'
 
-    get "freelancer/applications/:id",to:"applicant#freelancer_applications"
+    get "freelancer/applications",to:"applicant#freelancer_applications"
     get "team/applications/:id",to:"applicant#team_applications"
 
     get "project/:id/members",to:"project_member#show"
@@ -105,7 +105,7 @@ Rails.application.routes.draw do
     get "project/:id/status",to:'project_status#show'
 
     post 'skills', to:'skills#create'
-    get "skills/:id" ,to:"skills#show"
+    get "skills" ,to:"skills#show"
     delete 'skills/:id' , to:"skills#destroy", as:"delete_skill"
 
     patch 'teams/join/:id' , to:"teams#join" ,as:"join_team"

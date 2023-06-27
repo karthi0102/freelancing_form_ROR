@@ -5,7 +5,7 @@ class Team < ApplicationRecord
 
   has_many :applicants , as: :applicable,dependent: :destroy
   has_many :project_members , as: :memberable,dependent: :destroy
-  has_many :projects ,through: :project_members
+  has_many :projects ,through: :project_members 
   before_create :randomize_id
   private
     def randomize_id

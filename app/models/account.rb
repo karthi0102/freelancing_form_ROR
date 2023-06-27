@@ -66,10 +66,7 @@ class Account < ApplicationRecord
     account = Account.find_for_authentication(email:email)
     account&.valid_password?(password)? account : nil
   end
-  has_many :access_grants,
-            class_name: 'Doorkeeper::AccessGrant',
-            foreign_key: :resource_owner_id,
-            dependent: :delete_all # or :destroy if you need callbacks
+
 
   has_many :access_tokens,
             class_name: 'Doorkeeper::AccessToken',
