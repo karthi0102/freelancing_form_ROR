@@ -3,10 +3,10 @@ class ProjectMemberController < ApplicationController
   before_action :is_client ,only: [:accept]
   before_action :is_project_client ,only: [:accept]
   def accept
-    project = Project.find_by(id:params[:project_id])
-    if project
-        applicant = project.applicants.find_by(id:params[:applicant_id])
-        if applicant
+    if Project.exists? :id => params[:project_id]
+        project = Project.find_by(id:params[:project_id])
+        if Applicant.exists? :id => params[:applicant_id]
+          applicant = project.applicants.find_by(id:params[:applicant_id])
           applicant_type = applicant.applicable_type
           applicant.status="accepted"
 
@@ -49,7 +49,7 @@ class ProjectMemberController < ApplicationController
         redirect_to root_path ,error:"Unkown Action"
       end
 
-   
+
 end
 
 

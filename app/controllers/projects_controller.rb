@@ -10,8 +10,8 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    if @project = Project.find_by(id:params[:id])
-       @project
+    if Project.exists? :id => params[:id]
+       @project = Project.find_by(id:params[:id])
        @freelancer = current_account.accountable if current_account.freelancer?
     else
       redirect_to root_path
@@ -41,33 +41,39 @@ class ProjectsController < ApplicationController
 
 
   def edit
-    if @project = Project.find(params[:id])
-      @project
+    if Project.exists? :id => params[:id]
+      @project = Project.find_by(id: params[:id])
     else
-      redirect_to  root_path
+      redirect_to  root_path ,error:"Project not found"
     end
   end
 
   def update
 
-    @project = Project.find(params[:id])
-
-    if @project.update(project_params)
-      redirect_to @project
+    if Project.exists? :id =>params[:id]
+      @project = Project.find_by(id: params[:id])
+      if @project.update(project_params)
+        redirect_to @project
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to  root_path ,error:"Project not found"
     end
   end
 
 
   def destroy
-    project = Project.find_by(id: params[:id])
-    if project and project.destroy
-      redirect_to my_projects_path, status: :see_other
+    if Project.exists? :id =>params[:id]
+      project = Project.find_by(id: params[:id])
+      if project and project.destroy
+        redirect_to my_projects_path, status: :see_other
+      else
+        redirect_to root_path ,error:"Error while deleting"
+      end
     else
-      redirect_to root_path ,error:"Error while deleting"
+      redirect_to  root_path ,error:"Project not found"
     end
-
   end
 
 
@@ -76,15 +82,16 @@ class ProjectsController < ApplicationController
   end
 
 
-
-
-
   def set_available
-    project = Project.find_by(id: params[:id])
-    if project and project.update(available:!project.available)
-      redirect_to project_path(project)
+    if Project.exists? :id => params[:id]
+      project = Project.find_by(id: params[:id])
+      if project and project.update(available:!project.available)
+        redirect_to project_path(project)
+      else
+        redirect_to root_path
+      end
     else
-      redirect_to root_path
+      redirect_to  root_path ,error:"Project not found"
     end
 
   end
@@ -97,7 +104,6 @@ class ProjectsController < ApplicationController
   end
 
   def is_client
-
     unless current_account.client?
       flash[:error] = "Unauthorized action"
       redirect_to projects_path
@@ -106,19 +112,16 @@ class ProjectsController < ApplicationController
 
   def is_freelancer
     unless  current_account.freelancer?
-
       flash[:error] = "Unauthorized action"
       redirect_to root_path
-
     end
   end
 
 
   def is_project_client
 
-    project_id=params[:id]
-    project = Project.find_by(id:project_id)
-    if project
+    if Project.exists? :id => params[:id]
+      project = Project.find_by(id:project_id)
       if current_account.accountable.id !=project.client.id
         redirect_to root_path ,error: "Unauthorised Action"
       end

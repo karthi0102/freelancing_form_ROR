@@ -9,7 +9,7 @@ class SkillsController < ApplicationController
         if skill.save and  freelancer.save
           redirect_to freelancer_profile_path(freelancer)
         else
-          redirect_to root_path ,status: :expectation_failed
+          redirect_to root_path ,status: :expectation_failed,error:"Unauthorised action"
         end
       end
     end

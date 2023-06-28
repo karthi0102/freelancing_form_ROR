@@ -2,12 +2,14 @@ class TeamsController < ApplicationController
   before_action :authenticate_account!
   before_action :is_freelancer, except: [:show]
   before_action :is_team_admin, only: [:edit,:update,:destroy,:remove]
+
   def index
     @teams = Team.all
   end
+
   def show
-    if @team = Team.find_by(id: params[:id])
-      @team
+    if Team.exists? :id => params[:id]
+      @team = Team.find_by(id: params[:id])
     else
       redirect_to root_path ,error:"Not found"
     end
@@ -48,20 +50,29 @@ class TeamsController < ApplicationController
   end
 
   def update
-    @team = Team.find(params[:id])
-    if @team.update(team_params)
-        redirect_to team_path(@team)
+    if Team.exists? :id => params[:id]
+      @team= Team.find_by(id: params[:id])
+      if @team.update(team_params)
+          redirect_to team_path(team)
+      else
+        render :new ,status: :unprocessable_entity
+      end
     else
-      render :new ,status: :unprocessable_entity
+      redirect_to root_path ,error:"Team not found"
     end
   end
 
   def destroy
-    team = Team.find(params[:id])
-    if team.destroy
-      redirect_to teams_path ,status: :see_other
+
+    if Team.exists? :id => params[:id]
+      team = Team.find_by(id: params[:id])
+      if team.destroy
+        redirect_to teams_path ,status: :see_other
+      else
+        redirect_to root_path,error:"cant delete team"
+      end
     else
-      redirect_to root_path,error:"cant delete team"
+      redirect_to root_path ,error:"Team not found"
     end
   end
 
@@ -77,26 +88,30 @@ class TeamsController < ApplicationController
           redirect_to team_path(team),error:"Error while joining a team"
         end
       else
-          redirect_to teams_path
+          redirect_to teams_path,error:"Team not found"
       end
     else
-      redirect_to root_path
+      redirect_to root_path,error:"user not found"
     end
   end
 
 
   def remove
-    freelancer = Freelancer.find_by(id:params[:freelancer_id])
-    team=Team.find_by(id: params[:id])
-    if freelancer and team
-      freelancer.teams.delete(team)
-      if freelancer.save and team.save
-        redirect_to team_path(team)
-      else
-        redirect_to root_path
-      end
+    if Team.exists? :id =>params[:id]
+        team=Team.find_by(id: params[:id])
+        freelancer = Freelancer.find_by(id:params[:freelancer_id])
+        if freelancer
+          freelancer.teams.delete(team)
+            if freelancer.save and team.save
+              redirect_to team_path(team),notice:"Removed from team"
+            else
+              redirect_to root_path ,error:"Error while removing"
+            end
+        else
+          redirect_to root_path,error:"Freelancer not found"
+        end
     else
-      redirect_to root_path
+      redirect_to teams_path,error:"Team not found"
     end
 
   end

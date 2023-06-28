@@ -12,24 +12,32 @@ class PaymentController < ApplicationController
 
   def create
     params= payment_params
-    project = Project.find(params[:project_id])
-    payment = project.payment
-    project_member = project.project_members.find_by(id: params[:member_id])
-    account_details= payment.account_details
-    account_details["values"].each do |h|
-      if h["id"] == project_member.id
-        h["status"] ="completed"
-        h["amount"]=params["amount"].to_f
-        h["paid_date"]=DateTime.now
+    if Project.exists? :id => params[:project_id]
+      project = Project.find_by(id: params[:project_id])
+      payment = project.payment
+      if ProjectMember.exists? :id => params[:member_id]
+        project_member = project.project_members.find_by(id: params[:member_id])
+        account_details= payment.account_details
+        account_details["values"].each do |h|
+          if h["id"] == project_member.id
+            h["status"] ="completed"
+            h["amount"]=params["amount"].to_f
+            h["paid_date"]=DateTime.now
+          end
+        end
+        payment.save
+        len= account_details["values"].select {|h| h["status"]="completed"}.length
+        if account_details["values"].length == len
+          payment.status="completed"
+          payment.save
+        end
+        redirect_to my_projects_path
+      else
+        redirect_to  root_path ,error:"Member not found"
       end
+    else
+      redirect_to  root_not foundpath ,error:"Project "
     end
-    payment.save
-    len= account_details["values"].select {|h| h["status"]="completed"}.length
-    if account_details["values"].length == len
-      payment.status="completed"
-      payment.save
-    end
-    redirect_to my_projects_path
   end
   private
   def payment_params
