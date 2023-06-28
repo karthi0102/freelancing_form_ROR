@@ -50,10 +50,10 @@ class ProjectsController < ApplicationController
 
   def update
 
-    project = Project.find(params[:id])
+    @project = Project.find(params[:id])
 
-    if project.update(project_params)
-      redirect_to project
+    if @project.update(project_params)
+      redirect_to @project
     else
       render :edit, status: :unprocessable_entity
     end

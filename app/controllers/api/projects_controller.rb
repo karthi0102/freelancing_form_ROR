@@ -10,7 +10,7 @@ class Api::ProjectsController < Api::ApiController
     if projects.empty?
       render json: {message: "No Projects"},status: :no_content
     else
-      render json: projects, status: :ok
+      render json: projects,except: [:created_at, :updated_at], status: :ok
     end
   end
 
@@ -18,7 +18,8 @@ class Api::ProjectsController < Api::ApiController
 
     project = Project.find_by(id:params[:id].to_i)
     if project
-      render json: project ,status: :ok
+
+      render json: project,except: [:created_at, :updated_at] ,status: :ok
     else
       render json: {message: "No project found with this is id"},status: :not_found
     end

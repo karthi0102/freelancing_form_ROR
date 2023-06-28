@@ -48,10 +48,9 @@ class TeamsController < ApplicationController
   end
 
   def update
-    team = Team.find(params[:id])
-    if team.update(team_params)
-        team.save
-        redirect_to team_path(team)
+    @team = Team.find(params[:id])
+    if @team.update(team_params)
+        redirect_to team_path(@team)
     else
       render :new ,status: :unprocessable_entity
     end

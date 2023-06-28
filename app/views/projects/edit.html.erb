@@ -1,12 +1,10 @@
 <div class="container ">
     <div class="row my-5 ">
             <div class="col-6 offset-3 ">
-                <div class="card shadow">
-                    <div class="card-body">
-                        <h1 class="text-center">Edit Project <%@project.name%></h1>
+
+                        <h3 class="text-center">Edit  <%=@project.name%></h3>
                         <%= render "form", project: @project ,button:"Edit Project" ,img:false %>
-                    </div>
-                </div>
+
             </div>
     </div>
 </div>

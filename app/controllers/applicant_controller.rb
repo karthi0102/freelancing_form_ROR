@@ -58,7 +58,7 @@ end
 private
   def is_client
 
-    unless  current_account.client?
+    unless current_account.client?
       flash[:error] = "Unauthorized action"
       redirect_to projects_path
     end

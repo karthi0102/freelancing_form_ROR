@@ -44,7 +44,8 @@
                                     <%=image_tag(freelancer.image,class:"freelancer-img")%>
                                 </div>
                                 <div>
-                                    <p class="m-1"><%=freelancer.name%></p>
+                                    <p class="m-1"><%=freelancer.name.upcase%></p>
+                                    <p class="m-1 font-monospace"><%=freelancer.description[0..150]%></p>
                                     <p class="m-1"><strong><%=freelancer.location%></strong></p>
                                     <p class="m-1"><%=freelancer.ratings%><i class="fa-solid fa-star" style="color:gold"></i></p>
                                     <%= link_to "View Profile",freelancer_profile_path(freelancer.accountable),class:"btn btn-info btn-sm"%>

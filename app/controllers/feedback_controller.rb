@@ -22,7 +22,6 @@ class FeedbackController < ApplicationController
     team = Team.find_by(id:feedback_data["to"])
     project_member = ProjectMember.find_by(id: feedback_data["member_id"])
     account = Account.find_by(id: feedback_data["from"])
-
     team.freelancers.each do |member|
       feedback = Feedback.new(created:account,recipient:member.account,rating:feedback_data["rating"],comment:feedback_data["comment"])
       feedback.save

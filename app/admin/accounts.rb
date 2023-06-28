@@ -13,7 +13,6 @@ ActiveAdmin.register Account do
     permitted << :other if params[:action] == 'create' && current_user.admin?
     permitted
   end
-
   scope :all
   scope :rating_grater_than_3
   scope :rating_less_than_3

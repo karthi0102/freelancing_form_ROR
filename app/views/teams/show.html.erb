@@ -22,12 +22,14 @@
     </div>
     <%end%>
 
+    <%if @team.projects.length!=0 %>
     <h3 class="my-3">Projects</h3>
     <div class="row">
         <%@team.projects.each do |project|%>
             <%=render "projects/card",project:project,author_display:true%>
         <%end%>
     </div>
+    <% end %>
 </div>
 
 

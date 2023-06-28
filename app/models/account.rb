@@ -51,10 +51,19 @@ class Account < ApplicationRecord
 
   before_create :randomize_id
   before_create :downcase_name
+  before_create :downcase_location
 
+  before_update :downcase_name
+  before_update :downcase_location
   def downcase_name
     name.downcase!
   end
+
+  def downcase_location
+    location.downcase!
+  end
+
+
   private
     def randomize_id
         self.id = SecureRandom.random_number(1_000_000_000)
