@@ -15,6 +15,8 @@ RSpec.describe Api::ProjectsController, type: :request do
   let(:client_token1) {create(:doorkeeper_access_token,resource_owner_id:client_account1.id)}
   let!(:project) {create(:project,client:client)}
   let(:team){create(:team)}
+
+  
   describe "get index" do
     context "when there is not access token" do
       before do

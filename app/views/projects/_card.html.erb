@@ -13,7 +13,7 @@
                 <div class="card-body">
                     <h4><%=project.name%></h4>
                     <p>
-                        <%=project.description %>
+                        <%=project.description[0..250]... %>
                     </p>
                     <div>
                         <% if author_display %>

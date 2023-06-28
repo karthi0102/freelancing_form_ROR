@@ -1,0 +1,62 @@
+<style>
+    .freelancer-img{
+        height: 100px;
+        width: 100px;
+    }
+</style>
+
+
+<div class="container">
+    <h2 class="my-3">View All Freelancers</h2>
+    <div class="card shadow">
+        <div class="card-body">
+            <h5 class="my-4">Filter Freelancers as you want</h5>
+
+            <%=form_with url:all_freelancers_path,class:"row",method: :get do |f|%>
+                <div class="form-group my-3 col-6">
+                    <%=f.text_field :name ,class:"form-control",placeholder:"Search by name"%>
+                </div>
+                <div class="form-group my-3 col-6">
+                    <%=f.text_field :location ,class:"form-control",placeholder:"Search by location"%>
+                </div>
+                <div class="form-group my-3 col-6">
+                    <%=f.text_field :skill ,class:"form-control",placeholder:"Search by skill"%>
+                </div>
+                <div class="form-group my-3 col-6">
+                    <%=f.number_field :rating ,class:"form-control",placeholder:"Search by rating"%>
+                </div>
+                <div class="col-6 my-3">
+                    <%=f.submit "Search",class:"btn btn-primary"%>
+                </div>
+
+            <%end%>
+
+        </div>
+    </div>
+    <div class="my-3">
+        <div class="row">
+            <%@freelancers.each do |freelancer|%>
+                <div class="col-12 my-3">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="d-flex gap-5">
+                                <div>
+                                    <%=image_tag(freelancer.image,class:"freelancer-img")%>
+                                </div>
+                                <div>
+                                    <p class="m-1"><%=freelancer.name%></p>
+                                    <p class="m-1"><strong><%=freelancer.location%></strong></p>
+                                    <p class="m-1"><%=freelancer.ratings%><i class="fa-solid fa-star" style="color:gold"></i></p>
+                                    <%= link_to "View Profile",freelancer_profile_path(freelancer.accountable),class:"btn btn-info btn-sm"%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <%end%>
+        </div>
+    </div>
+</div>
+
+
+

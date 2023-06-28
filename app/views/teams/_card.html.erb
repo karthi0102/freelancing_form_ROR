@@ -30,7 +30,7 @@
                 <div class="col-6">
                     <p ><strong>Team Name:</strong><%= team.name %></p>
                     <p class="my-1"><strong>Description:</strong></p>
-                    <p><%= team.description %></p>
+                    <p><%= team.description[0..250] %>...</p>
 
                     <p><%= link_to "View Team" ,team_path(team),class:"btn btn-sm btn-info" %></p>
                     <p class="my-1"><strong>Created By</strong></p>

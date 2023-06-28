@@ -5,15 +5,15 @@ ActiveAdmin.register Account do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :name, :email, :phone, :linkedin, :gender, :description, :accountable_type, :accountable_id, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at
-  #
+  #  permit_params :name, :email, :phone, :linkedin, :gender, :description,
   # or
   #
   permit_params do
-    permitted = [:name, :email, :phone, :linkedin, :gender, :description, :accountable_type, :accountable_id, :encrypted_password, :reset_password_token, :reset_password_sent_at, :remember_created_at]
+    permitted = [:name, :email, :phone, :linkedin, :gender, :description, :location]
     permitted << :other if params[:action] == 'create' && current_user.admin?
     permitted
   end
+
   scope :all
   scope :rating_grater_than_3
   scope :rating_less_than_3
@@ -24,6 +24,7 @@ ActiveAdmin.register Account do
     column :linkedin
     column :description
     column :gender
+    column :location
     column "User Type", :accountable
     column "Recieved Feedbacks", :recipient_feedbacks
     column "Created Feedbacks", :creator_feedbacks
@@ -34,9 +35,7 @@ ActiveAdmin.register Account do
   filter :phone
   filter :name
   filter :gender
+  filter :location
   filter :accountable_type
-
-
-
 
 end

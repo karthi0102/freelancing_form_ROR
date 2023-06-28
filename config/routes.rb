@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   get "client/registration" ,to:"client_registration#new"
   post "client/registration" ,to:"client_registration#create"
 
+  get "freelancers" ,to:"freelancer#index" ,as:"all_freelancers"
+
   get "freelancer/registration", to:"freelancer_registration#new"
   post "freelancer/registration", to:"freelancer_registration#create"
 

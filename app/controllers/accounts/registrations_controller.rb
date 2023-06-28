@@ -25,6 +25,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
 
     resource.accountable_type=params[:role][:role].camelcase
     resource.linkedin=params[:account][:linkedin]
+    resource.location=params[:account][:location]
     resource.accountable_id = accountable.id
     resource.description=params[:account][:description]
 
@@ -112,7 +113,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   end
 
   def account_params
-    params.require(:account).permit(:name,:gender,:phone,:image,:linkedin,:description)
+    params.require(:account).permit(:name,:gender,:phone,:location,:image,:linkedin,:description)
   end
 
   def role_params
