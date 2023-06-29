@@ -1,4 +1,5 @@
 class Project < ApplicationRecord
+  paginates_per 4
   include Available
   belongs_to :client
   has_one_attached :image,dependent: :destroy
@@ -27,6 +28,6 @@ class Project < ApplicationRecord
     def randomize_id
         self.id = SecureRandom.random_number(1_000_000_000)
     end
-    
+
 end
 

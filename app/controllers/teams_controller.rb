@@ -1,5 +1,7 @@
 class TeamsController < ApplicationController
   before_action :authenticate_account!
+  include FreelancerAction
+
   before_action :is_freelancer, except: [:show]
   before_action :is_team_admin, only: [:edit,:update,:destroy,:remove]
 
@@ -131,14 +133,7 @@ class TeamsController < ApplicationController
     end
   end
 
-  def is_freelancer
-    unless current_account.freelancer?
-      flash[:error] = "Unauthorized action"
-      redirect_to root_path
-    end
-
-
-  end
+ 
 
 end
 

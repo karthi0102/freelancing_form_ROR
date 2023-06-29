@@ -9,7 +9,7 @@
 
           <%= form_with url: payment_path, local: true do |form| %>
 
-            <div >
+            <div>
               <%=form.hidden_field "project_id",value:@project.id%>
               <%=form.hidden_field "member_id",value: @member.id %>
             </div>

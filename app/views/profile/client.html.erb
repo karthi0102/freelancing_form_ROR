@@ -12,21 +12,25 @@
         </div>
     </div>
 
-    <h2 class="my-2">My Projects</h2>
+    <% if @client.projects.length > 0 %>
+        <h2 class="my-2">My Projects</h2>
 
-    <div class="row">
-        <% @client.projects.each do |project|%>
-            <%= render "projects/card" ,project: project ,author_display:false%>
-        <% end %>
-    </div>
+        <div class="row">
+            <% @client.projects.each do |project|%>
+                <%= render "projects/card" ,project: project ,author_display:false%>
+            <% end %>
+        </div>
+    <% end %>
 
-    <h2 class="my-2">Feedbacks</h2>
+    <% if @client.account.recipient_feedbacks.length >0 %>
+        <h2 class="my-2">Feedbacks</h2>
 
-    <div class="row">
-        <% @client.account.recipient_feedbacks.each do |feedback| %>
-          <%= render "feedback",feedback:feedback %>
-        <% end %>
-    </div>
+        <div class="row">
+            <% @client.account.recipient_feedbacks.each do |feedback| %>
+            <%= render "feedback",feedback:feedback %>
+            <% end %>
+        </div>
+    <% end %>
 
 </div>
 

@@ -91,4 +91,6 @@ gem "rails-controller-testing"
 
 gem "ransack"
 
+gem 'kaminari'
+
 

@@ -1,5 +1,6 @@
 class BankAccountDetailsController < ApplicationController
   before_action :authenticate_account!
+  include FreelancerAction
   before_action :is_freelancer ,only: [:new,:create]
   def new
     @project_id = params[:project_id].to_i
@@ -39,7 +40,7 @@ class BankAccountDetailsController < ApplicationController
               if project_member.memberable_type=="Freelancer"
                 redirect_to new_feedback_path(to:project.client.account,from:project_member.memberable.account,member_id:project_member)
               else
-                redirect_to new_team_feedback_path(to:project.client.account,from:project_member.memberable.admin.account,member_id:project_member)
+                redirect_to new_feedback_path(to:project.client.account,from:project_member.memberable.admin.account,member_id:project_member)
               end
           end
         end
@@ -56,11 +57,5 @@ class BankAccountDetailsController < ApplicationController
       params.permit(:project_id, :member_id, :account_number,:ifsc_code)
   end
 
-  def is_freelancer
-    unless   current_account.freelancer?
-      flash[:error] = "Unauthorized action"
-        redirect_to root_path
-    end
-  end
 
 end

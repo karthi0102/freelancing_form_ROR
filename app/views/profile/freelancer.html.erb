@@ -34,65 +34,63 @@
     </div>
 
     <% if @freelancer.teams.length!=0%>
-
-    <h2 class="my-3">Teams</h2>
-    <div class="row">
-        <%@freelancer.teams.each do |team|%>
-            <%=render "teams/card",team:team%>
-        <%end%>
-    </div>
+        <h2 class="my-3">Teams</h2>
+        <div class="row">
+            <%@freelancer.teams.each do |team|%>
+                <%=render "teams/card",team:team%>
+            <%end%>
+        </div>
     <% end %>
 
     <%if @freelancer.projects.length!=0 %>
-    <h2 class="my-5">Previous Project Experience</h2>
-    <div class="row">
-        <%@freelancer.projects.each do |project|%>
-            <%=render "projects/card",project:project, author_display: true%>
-        <% end %>
-    </div>
+        <h2 class="my-5">Previous Project Experience</h2>
+        <div class="row">
+            <%@freelancer.projects.each do |project|%>
+                <%=render "projects/card",project:project, author_display: true%>
+            <% end %>
+        </div>
     <% end %>
+
     <% if @freelancer.account.recipient_feedbacks.length!=0 %>
-    <h2 class="my-3">Feedbacks</h2>
-    <div class="row">
-        <%@freelancer.account.recipient_feedbacks.each do |feedback|%>
-            <%=render "feedback",feedback:feedback %>
-        <%end%>
-    </div>
+        <h2 class="my-3">Feedbacks</h2>
+        <div class="row">
+            <%@freelancer.account.recipient_feedbacks.each do |feedback|%>
+                <%=render "feedback",feedback:feedback %>
+            <%end%>
+        </div>
     <% end %>
 
 
 
     <%if @freelancer.skills.length!=0%>
+        <h2 class="my-3">Skills</h2>
+        <div class="card shadow my-3">
+            <div class="card-body">
+                <div class="row">
+                <% @freelancer.skills.each do |skill|%>
 
-    <h2 class="my-3">Skills</h2>
-    <div class="card shadow my-3">
-        <div class="card-body">
-            <div class="row">
-            <% @freelancer.skills.each do |skill|%>
+                        <% bg="" %>
+                        <% if skill.level=="Beginner" %>
+                        <% bg="bg-info" %>
+                        <% elsif skill.level=="Intermediate" %>
+                        <% bg="bg-warning" %>
+                        <% else %>
+                        <% bg="bg-success" %>
+                        <% end %>
+                            <%= render "skills/skills",skill:skill,bg:bg %>
 
-                    <% bg="" %>
-                    <% if skill.level=="Beginner" %>
-                    <% bg="bg-info" %>
-                    <% elsif skill.level=="Intermediate" %>
-                    <% bg="bg-warning" %>
-                    <% else %>
-                    <% bg="bg-success" %>
                     <% end %>
-                        <%= render "skills/skills",skill:skill,bg:bg %>
-
-                <% end %>
+                </div>
             </div>
         </div>
-    </div>
     <% end %>
 
      <% if current_account.accountable == @freelancer %>
-    <div class="my-3">
-        <h2>Add Skills</h2>
-        <%= render "skills/form" %>
-    </div>
+        <div class="my-3">
+            <h2>Add Skills</h2>
+            <%= render "skills/form" %>
+        </div>
     <%end%>
-
 
 </div>
 

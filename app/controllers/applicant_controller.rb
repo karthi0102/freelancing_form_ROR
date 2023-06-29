@@ -1,5 +1,7 @@
 class ApplicantController < ApplicationController
   before_action :authenticate_account!
+  include ClientAction
+  include FreelancerAction
   before_action :is_freelancer , except: [:reject]
   before_action :is_client ,only: [:reject]
 
@@ -55,20 +57,5 @@ def reject
   end
 end
 
-private
-  def is_client
-
-    unless current_account.client?
-      flash[:error] = "Unauthorized action"
-      redirect_to projects_path
-    end
-  end
-
-  def is_freelancer
-    unless current_account.freelancer?
-      flash[:error] = "Unauthorized action"
-      redirect_to root_path
-    end
-  end
 
 end

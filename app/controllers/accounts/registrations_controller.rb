@@ -8,6 +8,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+  
     accountable = if params[:role][:role]=="Client"
         Client.new(client_params)
     elsif params[:role][:role]=="Freelancer"
@@ -18,22 +19,18 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
 
     puts accountable.id
 
+    account_details = account_params
+
     build_resource(sign_up_params)
-    resource.name = params[:account][:name]
-    resource.phone = params[:account][:phone]
-    resource.gender = params[:account][:gender]
-
-    resource.accountable_type=params[:role][:role].camelcase
-    resource.linkedin=params[:account][:linkedin]
-    resource.location=params[:account][:location]
-    resource.accountable_id = accountable.id
-    resource.description=params[:account][:description]
-
+    resource.name = account_details["name"]
+    resource.phone = account_details["phone"]
+    resource.gender = account_details["gender"]
+    resource.linkedin=account_details["linkedin"]
+    resource.location=account_details["location"]
+    resource.accountable = accountable
+    resource.description=account_details["description"]
+    resource.image.attach(account_details["image"])
     resource.save
-    resource.image.attach(params[:account][:image])
-
-    resource.save
-
 
     yield resource if block_given?
     if resource.persisted?
@@ -113,7 +110,7 @@ class Accounts::RegistrationsController < Devise::RegistrationsController
   end
 
   def account_params
-    params.require(:account).permit(:name,:gender,:phone,:location,:image,:linkedin,:description)
+    params.require(:account).permit(:name,:gender,:phone,:location,:image,:linkedin,:description,:location)
   end
 
   def role_params

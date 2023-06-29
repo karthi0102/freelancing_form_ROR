@@ -1,5 +1,6 @@
 class ProjectMemberController < ApplicationController
   before_action :authenticate_account!
+
   before_action :is_client ,only: [:accept]
   before_action :is_project_client ,only: [:accept]
   def accept
@@ -41,14 +42,13 @@ class ProjectMemberController < ApplicationController
 
           applicant.save
           project.save
-          redirect_to project_path(project),notice:"Rejected"
+          redirect_to project_path(project),notice:"Accpeted"
         else
           redirect_to project_path(project) ,error:"Applicant Not Found"
         end
       else
         redirect_to root_path ,error:"Unkown Action"
       end
-
 
 end
 

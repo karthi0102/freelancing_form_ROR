@@ -1,5 +1,6 @@
 class PaymentController < ApplicationController
   before_action :authenticate_account!
+  include ClientAction
   before_action :is_client
   def new
     @project = Project.find(params[:project_id].to_i)
@@ -43,10 +44,5 @@ class PaymentController < ApplicationController
   def payment_params
     params.permit(:project_id,:member_id,:card_number,:card_expiry,:card_cvv,:amount)
   end
-  def is_client
-    unless current_account.client?
-      flash[:error] = "Unauthorized action"
-      redirect_to projects_path
-    end
-  end
+ 
 end
