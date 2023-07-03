@@ -80,7 +80,7 @@ RSpec.describe BankAccountDetailsController, type: :controller do
          post :create ,params:{project_id:project,member_id:project_member1,account_number:"1234567890",ifsc_code:"12345678901"}
       end
       it "should redirect root page" do
-        expect(response).to redirect_to(new_team_feedback_path(to:project.client.account.id,from:project_member1.memberable.admin.account.id,member_id:project_member1.id))
+        expect(response).to redirect_to(new_feedback_path(to:project.client.account.id,from:project_member1.memberable.admin.account.id,member_id:project_member1.id))
 
       end
     end

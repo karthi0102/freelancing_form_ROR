@@ -6,7 +6,7 @@ class Api::ProjectsController < Api::ApiController
 
   def index
 
-    projects = Project.all
+    projects = Project.includes(:client).all
     if projects.empty?
       render json: {message: "No Projects"},status: :no_content
     else

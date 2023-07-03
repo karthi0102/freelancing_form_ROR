@@ -42,7 +42,7 @@ class ProjectMemberController < ApplicationController
 
           applicant.save
           project.save
-          redirect_to project_path(project),notice:"Accpeted"
+          redirect_to project_path(project),notice:"Accepted"
         else
           redirect_to project_path(project) ,error:"Applicant Not Found"
         end

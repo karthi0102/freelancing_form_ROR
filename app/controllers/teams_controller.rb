@@ -55,7 +55,7 @@ class TeamsController < ApplicationController
     if Team.exists? :id => params[:id]
       @team= Team.find_by(id: params[:id])
       if @team.update(team_params)
-          redirect_to team_path(team)
+          redirect_to team_path(@team)
       else
         render :new ,status: :unprocessable_entity
       end
@@ -133,7 +133,7 @@ class TeamsController < ApplicationController
     end
   end
 
- 
+
 
 end
 

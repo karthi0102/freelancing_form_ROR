@@ -16,7 +16,7 @@ RSpec.describe Project, type: :model do
       end
 
       it "should return false" do
-        expect(project.errors).to include(:name)
+        expect(project.errors[:name]).to include("should minimum of 5 and maximum of 30 characters")
       end
     end
 

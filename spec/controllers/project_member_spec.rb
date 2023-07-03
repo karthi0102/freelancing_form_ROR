@@ -39,8 +39,8 @@ RSpec.describe ProjectMemberController, type: :controller do
         sign_in client_account
         post :accept ,params:{project_id:project,applicant_id:applicant}
       end
-      it "should be eq to rejected " do
-        expect(flash[:notice]).to eq("Rejected")
+      it "should be eq to accepted " do
+        expect(flash[:notice]).to eq("Accepted")
       end
     end
     context "when user is client and project_is_invalid" do

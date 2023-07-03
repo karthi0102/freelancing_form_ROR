@@ -8,14 +8,13 @@ module ClientAction
     end
   end
   def is_project_client
-   
+
     if current_account.accountable != @project.client
       redirect_to root_path ,error: "Unauthorised Action"
     end
 
   end
   def find_project
-    puts "hii 1"
     id = params[:id] or params[:project_id]
     if Project.exists? :id => id
       @project = Project.find_by(id: id)

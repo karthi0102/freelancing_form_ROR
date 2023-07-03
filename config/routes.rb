@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     get "freelancers/all",to:"account#freelancers"
     get "clients/all",to:"account#clients"
 
+    get "freelancers" ,to:"freelancer#index" ,as:"all_freelancers"
 
     get "projects/:id/applicants", to:"applicant#applicants"
     post 'project/apply/freelancer/:id' ,to:"applicant#add_freelancer_applicant",as: 'apply_project_freelancer'

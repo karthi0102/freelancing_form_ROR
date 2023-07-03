@@ -9,7 +9,7 @@ class ProjectsController < ApplicationController
 
 
   def index
-    @projects = Project.available_projects
+    @projects = Project.available_project
   end
 
   def show
@@ -22,13 +22,13 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @client = current_account.accountable if current_account.client?
+    client = current_account.accountable if current_account.client?
     project_data=project_params
     image=project_data["image"]
     project_data.delete("image")
     @project = client.projects.create(project_data)
     @project.image.attach(image)
-    if @client.save and @project.save
+    if @project.save and  client.save
       redirect_to @project ,notice: "Created New Project"
     else
       render :new ,status: :unprocessable_entity
@@ -63,9 +63,7 @@ class ProjectsController < ApplicationController
   def client
 
     @client = current_account.accountable
-    puts "hii"
-    puts params[:page]
-    @projects =Project.all.page(params[:page])
+    @projects =@client.projects.page(params[:page])
 
   end
 
@@ -78,7 +76,6 @@ class ProjectsController < ApplicationController
         redirect_to root_path
       end
   end
-
 
   private
 
